@@ -74,26 +74,20 @@ const Navbar = () => {
               </NavigationMenuItem>
               
               <NavigationMenuItem>
-                <Link to="/flashcards" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Flashcards
-                  </NavigationMenuLink>
+                <Link to="/flashcards" className={navigationMenuTriggerStyle()}>
+                  Flashcards
                 </Link>
               </NavigationMenuItem>
               
               <NavigationMenuItem>
-                <Link to="/quizzes" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Quizzes
-                  </NavigationMenuLink>
+                <Link to="/quizzes" className={navigationMenuTriggerStyle()}>
+                  Quizzes
                 </Link>
               </NavigationMenuItem>
               
               <NavigationMenuItem>
-                <Link to="/stats" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Stats
-                  </NavigationMenuLink>
+                <Link to="/stats" className={navigationMenuTriggerStyle()}>
+                  Stats
                 </Link>
               </NavigationMenuItem>
             </NavigationMenuList>
