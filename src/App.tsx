@@ -4,7 +4,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+import LandingPage from "./pages/LandingPage";
+import Dashboard from "./pages/Index";
 import Library from "./pages/Library";
 import Flashcards from "./pages/Flashcards";
 import FlashcardStudy from "./pages/FlashcardStudy";
@@ -24,7 +25,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/app" element={<Dashboard />} />
           <Route path="/library" element={<Library />} />
           <Route path="/flashcards" element={<Flashcards />} />
           <Route path="/flashcards/study/:id" element={<FlashcardStudy />} />

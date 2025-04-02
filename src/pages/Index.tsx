@@ -83,7 +83,7 @@ const collections: CollectionItem[] = [
   }
 ];
 
-const Index = () => {
+const Dashboard = () => {
   const { toast } = useToast();
   const [showWelcome, setShowWelcome] = useState(true);
   
@@ -179,4 +179,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Dashboard;

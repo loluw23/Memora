@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, BarChart2, Settings, Search, User } from 'lucide-react';
+import { BookOpen, BarChart2, Settings, Search, User, Home, ArrowRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import UserAvatar from './UserAvatar';
 import { 
@@ -28,6 +28,13 @@ const Navbar = () => {
           
           <NavigationMenu className="hidden md:flex animate-fade-in" style={{ animationDelay: '0.1s' }}>
             <NavigationMenuList>
+              <NavigationMenuItem>
+                <Link to="/" className={navigationMenuTriggerStyle()}>
+                  <Home size={16} className="mr-1" />
+                  Home
+                </Link>
+              </NavigationMenuItem>
+              
               <NavigationMenuItem>
                 <NavigationMenuTrigger>Library</NavigationMenuTrigger>
                 <NavigationMenuContent>
@@ -100,6 +107,17 @@ const Navbar = () => {
           </div>
           
           <div className="flex items-center gap-2">
+            <Button 
+              className="rounded-full bg-memora-purple hover:bg-memora-purple/90 animate-fade-in" 
+              size="sm"
+              asChild
+              style={{ animationDelay: '0.3s' }}
+            >
+              <Link to="/app">
+                App <ArrowRight size={14} className="ml-1" />
+              </Link>
+            </Button>
+            
             <Button 
               className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors animate-fade-in" 
               variant="ghost"
