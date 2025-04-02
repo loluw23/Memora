@@ -1,11 +1,10 @@
 
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Clock, Award, FileText, BarChart3 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
+import { Card, CardContent } from '@/components/ui/card';
+import { FileCheck, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-export interface Quiz {
+export type Quiz = {
   id: string;
   title: string;
   category: string;
@@ -14,72 +13,49 @@ export interface Quiz {
   lastScore?: number;
   completedCount: number;
   colorClass: string;
-}
+};
 
 interface QuizPreviewProps {
   quiz: Quiz;
-  onClick?: () => void;
 }
 
-const QuizPreview = ({ quiz, onClick }: QuizPreviewProps) => {
+const QuizPreview: React.FC<QuizPreviewProps> = ({ quiz }) => {
+  const navigate = useNavigate();
+
+  const handleQuizClick = () => {
+    navigate(`/quizzes/${quiz.id}`);
+  };
+
   return (
     <Card 
-      className="hover-card overflow-hidden cursor-pointer animate-fade-in" 
-      onClick={onClick}
-      style={{ animationDelay: '0.2s' }}
+      className="hover:shadow-md transition-shadow cursor-pointer"
+      onClick={handleQuizClick}
     >
-      <div className={`h-2 ${quiz.colorClass}`}></div>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg">{quiz.title}</CardTitle>
-        <p className="text-sm text-muted-foreground">{quiz.category}</p>
-      </CardHeader>
-      <CardContent className="pb-2">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-1 text-sm">
-            <FileText size={16} className="text-muted-foreground" />
-            <span>{quiz.questionCount} questions</span>
-          </div>
-          <div className="flex items-center gap-1 text-sm">
-            <Clock size={16} className="text-muted-foreground" />
-            <span>{quiz.estimatedTime}</span>
-          </div>
-        </div>
-        
-        {quiz.lastScore !== undefined && (
-          <div className="mb-3">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-sm">Last score</span>
-              <span className="text-sm font-medium">{quiz.lastScore}%</span>
+      <CardContent className="p-0">
+        <div className={`${quiz.colorClass} h-2 rounded-t-lg`}></div>
+        <div className="p-4">
+          <h3 className="font-semibold mb-1">{quiz.title}</h3>
+          <p className="text-sm text-muted-foreground mb-3">{quiz.category}</p>
+          
+          <div className="flex justify-between text-sm">
+            <div className="flex items-center">
+              <FileCheck className="h-4 w-4 mr-1" />
+              <span>{quiz.questionCount} questions</span>
             </div>
-            <Progress 
-              value={quiz.lastScore} 
-              className="h-1.5" 
-              indicatorClassName={
-                quiz.lastScore >= 80 ? "bg-green-500" : 
-                quiz.lastScore >= 60 ? "bg-yellow-500" : "bg-red-500"
-              } 
-            />
+            <div className="flex items-center">
+              <Clock className="h-4 w-4 mr-1" />
+              <span>{quiz.estimatedTime}</span>
+            </div>
           </div>
-        )}
-        
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center gap-1">
-            <BarChart3 size={16} className="text-muted-foreground" />
-            <span>Completed {quiz.completedCount} times</span>
-          </div>
-          {quiz.lastScore && quiz.lastScore >= 90 && (
-            <div className="flex items-center gap-1 text-amber-500">
-              <Award size={16} />
-              <span className="font-medium">Excellent!</span>
+          
+          {quiz.lastScore !== undefined && (
+            <div className="mt-3 pt-3 border-t flex justify-between">
+              <span className="text-sm text-muted-foreground">Last score</span>
+              <span className="font-medium">{quiz.lastScore}%</span>
             </div>
           )}
         </div>
       </CardContent>
-      <CardFooter>
-        <Button className="w-full rounded-full bg-memora-purple hover:bg-memora-purple-dark">
-          Start Quiz
-        </Button>
-      </CardFooter>
     </Card>
   );
 };

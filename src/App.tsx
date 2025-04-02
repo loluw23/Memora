@@ -7,7 +7,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Library from "./pages/Library";
 import Flashcards from "./pages/Flashcards";
+import FlashcardStudy from "./pages/FlashcardStudy";
 import Quizzes from "./pages/Quizzes";
+import QuizDetail from "./pages/QuizDetail";
 import Stats from "./pages/Stats";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
@@ -25,7 +27,9 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/library" element={<Library />} />
           <Route path="/flashcards" element={<Flashcards />} />
+          <Route path="/flashcards/study/:id" element={<FlashcardStudy />} />
           <Route path="/quizzes" element={<Quizzes />} />
+          <Route path="/quizzes/:id" element={<QuizDetail />} />
           <Route path="/stats" element={<Stats />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />

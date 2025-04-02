@@ -2,132 +2,115 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+ 
 @layer base {
   :root {
-    --background: 260 25% 98%;
-    --foreground: 240 10% 15%;
-
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 15%;
-
+    --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 15%;
-
-    --primary: 260 86% 65%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 260 25% 96%;
-    --secondary-foreground: 240 10% 15%;
-
-    --muted: 260 10% 92%;
-    --muted-foreground: 240 5% 45%;
-
-    --accent: 196 92% 48%;
-    --accent-foreground: 0 0% 100%;
-
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-
-    --border: 260 15% 87%;
-    --input: 260 15% 87%;
-    --ring: 260 86% 65%;
-
-    --radius: 1rem;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.5rem;
   }
-
+ 
   .dark {
-    --background: 240 10% 15%;
+    --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
-
-    --card: 240 10% 20%;
+    --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
-
-    --popover: 240 10% 20%;
+    --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-
-    --primary: 260 86% 65%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 240 10% 24%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
-
-    --muted: 240 10% 24%;
-    --muted-foreground: 240 5% 65%;
-
-    --accent: 196 92% 48%;
-    --accent-foreground: 0 0% 100%;
-
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-
-    --border: 240 10% 28%;
-    --input: 240 10% 28%;
-    --ring: 260 86% 65%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
   }
 }
-
+ 
 @layer base {
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-@layer components {
-  .glass-card {
-    @apply bg-white/50 backdrop-blur-lg border border-white/20 rounded-2xl shadow-lg;
+/* Custom Memora colors */
+@layer utilities {
+  .bg-memora-purple {
+    background-color: #9b87f5;
   }
-  
-  .hover-card {
-    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  .bg-memora-teal {
+    background-color: #65D8C2;
   }
-  
-  .memora-gradient {
-    @apply bg-gradient-to-br from-memora-purple to-memora-purple-light;
-  }
-  
-  .memora-btn {
-    @apply rounded-full px-4 py-2 font-medium transition-all duration-300 
-           hover:translate-y-[-2px] hover:shadow-md active:translate-y-0 active:shadow-sm;
-  }
-  
-  .memora-card {
-    @apply rounded-2xl p-6 shadow-md transition-all duration-300 hover:shadow-lg;
-  }
-  
-  .flip-card-inner {
-    @apply relative w-full h-full transition-transform duration-700 transform-style-preserve-3d;
-  }
-  
-  .flip-card-front, .flip-card-back {
-    @apply absolute w-full h-full backface-hidden rounded-2xl p-6 shadow-md;
-  }
-  
-  .flip-card-back {
-    @apply transform rotate-y-180;
-  }
-  
-  .flip-active .flip-card-inner {
-    @apply transform rotate-y-180;
+  .text-memora-purple {
+    color: #9b87f5;
   }
 }
 
-@layer utilities {
-  .backface-hidden {
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
+/* Flashcard 3D effects */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Animation for fading in UI elements */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  
-  .transform-style-preserve-3d {
-    transform-style: preserve-3d;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .rotate-y-180 {
-    transform: rotateY(180deg);
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes pulseScale {
+  0%, 100% {
+    transform: scale(1);
   }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-scale {
+  animation: pulseScale 2s infinite ease-in-out;
 }
