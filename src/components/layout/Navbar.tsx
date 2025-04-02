@@ -1,9 +1,19 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, BarChart2, Settings, Search } from 'lucide-react';
+import { BookOpen, BarChart2, Settings, Search, User } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import UserAvatar from './UserAvatar';
+import { 
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle
+} from "@/components/ui/navigation-menu";
+import { Button } from '@/components/ui/button';
 
 const Navbar = () => {
   return (
@@ -17,20 +27,77 @@ const Navbar = () => {
             <span className="font-bold text-xl tracking-tight">Memora</span>
           </Link>
           
-          <div className="hidden md:flex items-center space-x-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <Link to="/library" className="text-muted-foreground hover:text-foreground transition-colors">
-              Library
-            </Link>
-            <Link to="/flashcards" className="text-muted-foreground hover:text-foreground transition-colors">
-              Flashcards
-            </Link>
-            <Link to="/quizzes" className="text-muted-foreground hover:text-foreground transition-colors">
-              Quizzes
-            </Link>
-            <Link to="/stats" className="text-muted-foreground hover:text-foreground transition-colors">
-              Stats
-            </Link>
-          </div>
+          <NavigationMenu className="hidden md:flex animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>Library</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="grid grid-cols-2 gap-3 p-4 w-[400px]">
+                    <Link
+                      to="/library"
+                      className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
+                    >
+                      <div className="font-medium">Browse Library</div>
+                      <div className="text-sm text-muted-foreground">
+                        View all your study materials
+                      </div>
+                    </Link>
+                    <Link
+                      to="/flashcards"
+                      className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
+                    >
+                      <div className="font-medium">Flashcards</div>
+                      <div className="text-sm text-muted-foreground">
+                        Create and review flashcards
+                      </div>
+                    </Link>
+                    <Link
+                      to="/quizzes"
+                      className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
+                    >
+                      <div className="font-medium">Quizzes</div>
+                      <div className="text-sm text-muted-foreground">
+                        Test your knowledge
+                      </div>
+                    </Link>
+                    <Link
+                      to="/worksheets"
+                      className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
+                    >
+                      <div className="font-medium">Worksheets</div>
+                      <div className="text-sm text-muted-foreground">
+                        Practice with worksheets
+                      </div>
+                    </Link>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              
+              <NavigationMenuItem>
+                <Link to="/flashcards" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Flashcards
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              
+              <NavigationMenuItem>
+                <Link to="/quizzes" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Quizzes
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              
+              <NavigationMenuItem>
+                <Link to="/stats" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Stats
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
         </div>
         
         <div className="flex items-center gap-4">
@@ -40,13 +107,33 @@ const Navbar = () => {
           </div>
           
           <div className="flex items-center gap-2">
-            <button className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors animate-fade-in" style={{ animationDelay: '0.3s' }}>
-              <BarChart2 size={20} />
-            </button>
-            <button className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors animate-fade-in" style={{ animationDelay: '0.4s' }}>
-              <Settings size={20} />
-            </button>
-            <UserAvatar className="animate-fade-in" style={{ animationDelay: '0.5s' }} />
+            <Button 
+              className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors animate-fade-in" 
+              variant="ghost"
+              size="icon"
+              asChild
+              style={{ animationDelay: '0.3s' }}
+            >
+              <Link to="/stats">
+                <BarChart2 size={20} />
+              </Link>
+            </Button>
+            
+            <Button 
+              className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors animate-fade-in" 
+              variant="ghost"
+              size="icon"
+              asChild
+              style={{ animationDelay: '0.4s' }}
+            >
+              <Link to="/settings">
+                <Settings size={20} />
+              </Link>
+            </Button>
+            
+            <Link to="/profile">
+              <UserAvatar className="animate-fade-in" style={{ animationDelay: '0.5s' }} />
+            </Link>
           </div>
         </div>
       </div>

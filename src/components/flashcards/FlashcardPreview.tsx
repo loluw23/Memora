@@ -1,8 +1,8 @@
 
-import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { BookOpen, Clock, ThumbsUp, ThumbsDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Clock, ChevronDown, ChevronUp } from 'lucide-react';
 
 export interface Flashcard {
   id: string;
@@ -14,90 +14,43 @@ export interface Flashcard {
 
 interface FlashcardPreviewProps {
   card: Flashcard;
-  onClick?: () => void;
+  expanded?: boolean;
 }
 
-const FlashcardPreview = ({ card, onClick }: FlashcardPreviewProps) => {
-  const [isFlipped, setIsFlipped] = useState(false);
-  
-  const handleFlip = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsFlipped(!isFlipped);
-  };
-  
+const FlashcardPreview = ({ card, expanded = false }: FlashcardPreviewProps) => {
   return (
-    <div 
-      className="w-full h-64 perspective-1000 cursor-pointer"
-      onClick={onClick}
-    >
-      <div 
-        className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}
-      >
-        {/* Front of card */}
-        <Card className="absolute w-full h-full backface-hidden p-6 flex flex-col">
-          <div className="flex justify-between items-start mb-4">
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <BookOpen size={14} />
-              <span>{card.category}</span>
-            </div>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Clock size={14} />
-              <span>Due: {card.dueDate}</span>
-            </div>
+    <Card className="overflow-hidden transition-all duration-200 hover:shadow-md">
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between mb-2">
+          <Badge variant="outline" className="bg-secondary font-normal">
+            {card.category}
+          </Badge>
+          <div className="flex items-center text-xs text-muted-foreground">
+            <Clock size={12} className="mr-1" />
+            {card.dueDate}
           </div>
-          
-          <div className="flex-1 flex items-center justify-center text-center p-4 font-medium text-lg">
-            {card.front}
-          </div>
-          
-          <div className="flex justify-center">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="mt-2 rounded-full px-4"
-              onClick={handleFlip}
-            >
-              Reveal Answer
-            </Button>
-          </div>
-        </Card>
+        </div>
         
-        {/* Back of card */}
-        <Card className="absolute w-full h-full backface-hidden p-6 flex flex-col rotate-y-180 bg-memora-purple/5">
-          <div className="flex justify-between items-start mb-4">
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <BookOpen size={14} />
-              <span>{card.category}</span>
-            </div>
+        <div className="font-medium">{card.front}</div>
+        
+        {expanded && (
+          <div className="mt-4 pt-4 border-t">
+            <div className="text-sm text-muted-foreground mb-1">Answer:</div>
+            <div className="font-medium">{card.back}</div>
           </div>
-          
-          <div className="flex-1 flex items-center justify-center text-center p-4 text-lg">
-            {card.back}
+        )}
+        
+        {!expanded ? (
+          <div className="flex justify-center mt-2">
+            <ChevronDown size={16} className="text-muted-foreground" />
           </div>
-          
-          <div className="flex justify-center gap-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="rounded-full px-4 text-red-500 hover:bg-red-50 hover:text-red-600 border-red-200"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <ThumbsDown size={16} className="mr-1" />
-              Difficult
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="rounded-full px-4 text-green-500 hover:bg-green-50 hover:text-green-600 border-green-200"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <ThumbsUp size={16} className="mr-1" />
-              Easy
-            </Button>
+        ) : (
+          <div className="flex justify-center mt-2">
+            <ChevronUp size={16} className="text-muted-foreground" />
           </div>
-        </Card>
-      </div>
-    </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
