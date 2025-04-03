@@ -14,6 +14,7 @@ export type LoginCredentials = {
 };
 
 export const signUp = async ({ email, password, username }: SignUpCredentials) => {
+  // Add the username to the user metadata
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -50,23 +51,23 @@ export const login = async ({ identifier, password }: LoginCredentials) => {
   } else {
     // Login with username
     // First, find the user's email by username
-    const { data: profileData, error: profileError } = await supabase
+    const { data: profiles, error: profileError } = await supabase
       .from('profiles')
       .select('id')
-      .eq('username', identifier)
-      .single();
+      .eq('username', identifier);
     
     if (profileError) {
       throw new Error('Invalid username or password');
     }
     
-    if (!profileData) {
+    if (!profiles || profiles.length === 0) {
       throw new Error('Invalid username or password');
     }
     
+    // Now that we have the user ID, we need to login with password
     // Since we can't directly query auth.users from the client,
-    // we'll attempt to sign in with the username as email (which will fail)
-    // to trigger the proper error message
+    // we need to use the signInWithPassword method with email
+    // TODO: In a production app, you might want to use a server-side function for this
     const { data, error } = await supabase.auth.signInWithPassword({
       email: identifier, // This will fail if username is not an email
       password,

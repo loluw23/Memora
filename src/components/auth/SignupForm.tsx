@@ -54,15 +54,17 @@ const SignupForm = () => {
     setError(null);
 
     try {
-      await signUp({
+      const result = await signUp({
         email: values.email,
         password: values.password,
         username: values.username,
       });
 
+      console.log('Signup successful:', result);
+      
       toast({
         title: 'Account created successfully',
-        description: 'Please check your email to confirm your account.',
+        description: 'You can now log in with your credentials.',
       });
 
       navigate('/login');
