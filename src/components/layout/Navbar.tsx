@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { BookOpen, BarChart2, Settings, Search, User, Home, ArrowRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import UserAvatar from './UserAvatar';
@@ -15,89 +15,112 @@ import {
 import { Button } from '@/components/ui/button';
 
 const Navbar = () => {
+  const location = useLocation();
+  const isLandingPage = location.pathname === "/";
+  
+  // Function to refresh the page when clicking the logo on non-landing pages
+  const handleLogoClick = (e: React.MouseEvent) => {
+    if (!isLandingPage) {
+      e.preventDefault();
+      window.location.reload();
+    }
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
-          <Link to="/" className="flex items-center gap-2 animate-fade-in">
+          <Link 
+            to={isLandingPage ? "/" : "#"} 
+            onClick={handleLogoClick}
+            className="flex items-center gap-2 animate-fade-in"
+          >
             <div className="bg-memora-purple text-white rounded-lg p-1">
               <BookOpen size={24} />
             </div>
             <span className="font-bold text-xl tracking-tight">Memora</span>
           </Link>
           
-          <NavigationMenu className="hidden md:flex animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <Link to="/" className={navigationMenuTriggerStyle()}>
-                  <Home size={16} className="mr-1" />
-                  Home
-                </Link>
-              </NavigationMenuItem>
-              
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Library</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <div className="grid grid-cols-2 gap-3 p-4 w-[400px]">
-                    <Link
-                      to="/library"
-                      className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
-                    >
-                      <div className="font-medium">Browse Library</div>
-                      <div className="text-sm text-muted-foreground">
-                        View all your study materials
-                      </div>
-                    </Link>
-                    <Link
-                      to="/flashcards"
-                      className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
-                    >
-                      <div className="font-medium">Flashcards</div>
-                      <div className="text-sm text-muted-foreground">
-                        Create and review flashcards
-                      </div>
-                    </Link>
-                    <Link
-                      to="/quizzes"
-                      className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
-                    >
-                      <div className="font-medium">Quizzes</div>
-                      <div className="text-sm text-muted-foreground">
-                        Test your knowledge
-                      </div>
-                    </Link>
-                    <Link
-                      to="/worksheets"
-                      className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
-                    >
-                      <div className="font-medium">Worksheets</div>
-                      <div className="text-sm text-muted-foreground">
-                        Practice with worksheets
-                      </div>
-                    </Link>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-              
-              <NavigationMenuItem>
-                <Link to="/flashcards" className={navigationMenuTriggerStyle()}>
-                  Flashcards
-                </Link>
-              </NavigationMenuItem>
-              
-              <NavigationMenuItem>
-                <Link to="/quizzes" className={navigationMenuTriggerStyle()}>
-                  Quizzes
-                </Link>
-              </NavigationMenuItem>
-              
-              <NavigationMenuItem>
-                <Link to="/stats" className={navigationMenuTriggerStyle()}>
-                  Stats
-                </Link>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+          {isLandingPage ? (
+            <NavigationMenu className="hidden md:flex animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <Link to="/" className={navigationMenuTriggerStyle()}>
+                    <Home size={16} className="mr-1" />
+                    Home
+                  </Link>
+                </NavigationMenuItem>
+                
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>Library</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <div className="grid grid-cols-2 gap-3 p-4 w-[400px]">
+                      <Link
+                        to="/library"
+                        className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
+                      >
+                        <div className="font-medium">Browse Library</div>
+                        <div className="text-sm text-muted-foreground">
+                          View all your study materials
+                        </div>
+                      </Link>
+                      <Link
+                        to="/flashcards"
+                        className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
+                      >
+                        <div className="font-medium">Flashcards</div>
+                        <div className="text-sm text-muted-foreground">
+                          Create and review flashcards
+                        </div>
+                      </Link>
+                      <Link
+                        to="/quizzes"
+                        className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
+                      >
+                        <div className="font-medium">Quizzes</div>
+                        <div className="text-sm text-muted-foreground">
+                          Test your knowledge
+                        </div>
+                      </Link>
+                      <Link
+                        to="/worksheets"
+                        className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
+                      >
+                        <div className="font-medium">Worksheets</div>
+                        <div className="text-sm text-muted-foreground">
+                          Practice with worksheets
+                        </div>
+                      </Link>
+                    </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+                
+                <NavigationMenuItem>
+                  <Link to="/flashcards" className={navigationMenuTriggerStyle()}>
+                    Flashcards
+                  </Link>
+                </NavigationMenuItem>
+                
+                <NavigationMenuItem>
+                  <Link to="/quizzes" className={navigationMenuTriggerStyle()}>
+                    Quizzes
+                  </Link>
+                </NavigationMenuItem>
+                
+                <NavigationMenuItem>
+                  <Link to="/worksheets" className={navigationMenuTriggerStyle()}>
+                    Worksheets
+                  </Link>
+                </NavigationMenuItem>
+                
+                <NavigationMenuItem>
+                  <Link to="/stats" className={navigationMenuTriggerStyle()}>
+                    Stats
+                  </Link>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          ) : null}
         </div>
         
         <div className="flex items-center gap-4">

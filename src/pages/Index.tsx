@@ -6,11 +6,13 @@ import RecentActivity from '@/components/dashboard/RecentActivity';
 import LibraryCollection, { CollectionItem } from '@/components/library/LibraryCollection';
 import FlashcardPreview, { Flashcard } from '@/components/flashcards/FlashcardPreview';
 import QuizPreview, { Quiz } from '@/components/quizzes/QuizPreview';
+import WorksheetPreview, { Worksheet } from '@/components/worksheets/WorksheetPreview';
 import CreateButton from '@/components/common/CreateButton';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Brain, BookOpen, FileCheck, Award } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Link } from 'react-router-dom';
 
 // Sample data
 const flashcards: Flashcard[] = [
@@ -53,6 +55,27 @@ const quizzes: Quiz[] = [
   }
 ];
 
+const worksheets: Worksheet[] = [
+  {
+    id: '1',
+    title: 'World History Timeline',
+    questionCount: 12,
+    estimatedTime: '25 min',
+    completedCount: 2,
+    lastScore: 80,
+    colorClass: 'bg-memora-purple'
+  },
+  {
+    id: '2',
+    title: 'Algebra Practice Problems',
+    questionCount: 15,
+    estimatedTime: '30 min',
+    completedCount: 1,
+    lastScore: 75,
+    colorClass: 'bg-memora-teal'
+  }
+];
+
 const collections: CollectionItem[] = [
   {
     id: '1',
@@ -90,7 +113,7 @@ const Dashboard = () => {
   const handleCreateClick = () => {
     toast({
       title: "Create new content",
-      description: "Choose what you want to create: Flashcards, Quiz, or Notes",
+      description: "Choose what you want to create: Flashcards, Quiz, or Worksheets",
     });
   };
   
@@ -110,17 +133,23 @@ const Dashboard = () => {
                   with spaced repetition, flashcards, quizzes, and more.
                 </p>
                 <div className="flex flex-wrap gap-3">
-                  <Button size="sm" className="rounded-full bg-memora-purple">
-                    <BookOpen size={16} className="mr-1" />
-                    Create Flashcards
+                  <Button size="sm" className="rounded-full bg-memora-purple" asChild>
+                    <Link to="/flashcards">
+                      <BookOpen size={16} className="mr-1" />
+                      Create Flashcards
+                    </Link>
                   </Button>
-                  <Button size="sm" variant="outline" className="rounded-full">
-                    <FileCheck size={16} className="mr-1" />
-                    Start a Quiz
+                  <Button size="sm" variant="outline" className="rounded-full" asChild>
+                    <Link to="/quizzes">
+                      <FileCheck size={16} className="mr-1" />
+                      Start a Quiz
+                    </Link>
                   </Button>
-                  <Button size="sm" variant="outline" className="rounded-full">
-                    <Award size={16} className="mr-1" />
-                    View Progress
+                  <Button size="sm" variant="outline" className="rounded-full" asChild>
+                    <Link to="/worksheets">
+                      <Award size={16} className="mr-1" />
+                      Try Worksheets
+                    </Link>
                   </Button>
                 </div>
               </div>
@@ -151,7 +180,7 @@ const Dashboard = () => {
           <div>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Due Flashcards</h3>
-              <button className="text-sm text-memora-purple hover:underline">View all</button>
+              <Link to="/flashcards" className="text-sm text-memora-purple hover:underline">View all</Link>
             </div>
             <div className="space-y-4">
               {flashcards.map(card => (
@@ -163,11 +192,23 @@ const Dashboard = () => {
           <div>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Recent Quizzes</h3>
-              <button className="text-sm text-memora-purple hover:underline">View all</button>
+              <Link to="/quizzes" className="text-sm text-memora-purple hover:underline">View all</Link>
             </div>
             <div className="space-y-4">
               {quizzes.map(quiz => (
                 <QuizPreview key={quiz.id} quiz={quiz} />
+              ))}
+            </div>
+          </div>
+          
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Worksheets</h3>
+              <Link to="/worksheets" className="text-sm text-memora-purple hover:underline">View all</Link>
+            </div>
+            <div className="space-y-4">
+              {worksheets.map(worksheet => (
+                <WorksheetPreview key={worksheet.id} worksheet={worksheet} />
               ))}
             </div>
           </div>
