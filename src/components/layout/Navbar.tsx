@@ -130,44 +130,74 @@ const Navbar = () => {
           </div>
           
           <div className="flex items-center gap-2">
-            <Button 
-              className="rounded-full bg-memora-purple hover:bg-memora-purple/90 animate-fade-in" 
-              size="sm"
-              asChild
-              style={{ animationDelay: '0.3s' }}
-            >
-              <Link to="/app">
-                App <ArrowRight size={14} className="ml-1" />
-              </Link>
-            </Button>
-            
-            <Button 
-              className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors animate-fade-in" 
-              variant="ghost"
-              size="icon"
-              asChild
-              style={{ animationDelay: '0.3s' }}
-            >
-              <Link to="/stats">
-                <BarChart2 size={20} />
-              </Link>
-            </Button>
-            
-            <Button 
-              className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors animate-fade-in" 
-              variant="ghost"
-              size="icon"
-              asChild
-              style={{ animationDelay: '0.4s' }}
-            >
-              <Link to="/settings">
-                <Settings size={20} />
-              </Link>
-            </Button>
-            
-            <Link to="/profile">
-              <UserAvatar className="animate-fade-in" style={{ animationDelay: '0.5s' }} />
-            </Link>
+            {isLandingPage ? (
+              <>
+                <Button 
+                  className="rounded-full bg-memora-purple hover:bg-memora-purple/90 animate-fade-in" 
+                  size="sm"
+                  asChild
+                  style={{ animationDelay: '0.3s' }}
+                >
+                  <Link to="/app">
+                    App <ArrowRight size={14} className="ml-1" />
+                  </Link>
+                </Button>
+                
+                <Button 
+                  className="rounded-full animate-fade-in" 
+                  size="sm"
+                  variant="outline"
+                  asChild
+                  style={{ animationDelay: '0.35s' }}
+                >
+                  <Link to="/login">
+                    Login
+                  </Link>
+                </Button>
+                
+                <Button 
+                  className="rounded-full animate-fade-in" 
+                  size="sm"
+                  variant="secondary"
+                  asChild
+                  style={{ animationDelay: '0.4s' }}
+                >
+                  <Link to="/signup">
+                    Sign Up
+                  </Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button 
+                  className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors animate-fade-in" 
+                  variant="ghost"
+                  size="icon"
+                  asChild
+                  style={{ animationDelay: '0.3s' }}
+                >
+                  <Link to="/stats">
+                    <BarChart2 size={20} />
+                  </Link>
+                </Button>
+                
+                <Button 
+                  className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors animate-fade-in" 
+                  variant="ghost"
+                  size="icon"
+                  asChild
+                  style={{ animationDelay: '0.4s' }}
+                >
+                  <Link to="/settings">
+                    <Settings size={20} />
+                  </Link>
+                </Button>
+                
+                <Link to="/profile">
+                  <UserAvatar className="animate-fade-in" style={{ animationDelay: '0.5s' }} />
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

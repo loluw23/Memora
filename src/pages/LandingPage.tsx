@@ -61,14 +61,31 @@ const LandingPage = () => {
                 Go to App <ArrowRight size={16} />
               </Button>
             </Link>
+            <Link to="/login">
+              <Button variant="outline" className="rounded-full">
+                Login
+              </Button>
+            </Link>
+            <Link to="/signup">
+              <Button variant="secondary" className="rounded-full">
+                Sign Up
+              </Button>
+            </Link>
           </nav>
           
           <div className="md:hidden">
-            <Link to="/app">
-              <Button size="sm" className="rounded-full">
-                App <ArrowRight size={14} />
-              </Button>
-            </Link>
+            <div className="flex gap-2">
+              <Link to="/login">
+                <Button size="sm" variant="outline" className="rounded-full">
+                  Login
+                </Button>
+              </Link>
+              <Link to="/app">
+                <Button size="sm" className="rounded-full">
+                  App <ArrowRight size={14} className="ml-1" />
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </header>
@@ -256,11 +273,18 @@ const LandingPage = () => {
             <p className="text-xl text-muted-foreground mb-10">
               Join thousands of students who are learning faster and remembering more with Memora.
             </p>
-            <Link to="/app">
-              <Button size="lg" className="rounded-full px-8 bg-memora-purple hover:bg-memora-purple/90">
-                Start Learning Now <ArrowRight className="ml-2" size={18} />
-              </Button>
-            </Link>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link to="/app">
+                <Button size="lg" className="rounded-full px-8 bg-memora-purple hover:bg-memora-purple/90">
+                  Start Learning Now <ArrowRight className="ml-2" size={18} />
+                </Button>
+              </Link>
+              <Link to="/signup">
+                <Button size="lg" variant="outline" className="rounded-full px-8">
+                  Create Account
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

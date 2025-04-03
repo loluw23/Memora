@@ -17,6 +17,8 @@ import Stats from "./pages/Stats";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +30,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/app" element={<Dashboard />} />
           <Route path="/library" element={<Library />} />
           <Route path="/flashcards" element={<Flashcards />} />
