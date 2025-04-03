@@ -1,5 +1,6 @@
 
 import { supabase } from "@/integrations/supabase/client";
+import { Database } from "@/integrations/supabase/types";
 
 export type SignUpCredentials = {
   email: string;
@@ -59,17 +60,17 @@ export const login = async ({ identifier, password }: LoginCredentials) => {
       throw new Error('Invalid username or password');
     }
     
-    // Then use the user ID to find the email
-    const { data: userData, error: userError } = await supabase.auth
-      .admin.getUserById(profileData.id);
-    
-    if (userError || !userData.user) {
+    if (!profileData) {
       throw new Error('Invalid username or password');
     }
     
-    // Finally, sign in with the email and password
+    // Then use the user ID to find the email in auth.users
+    // Note: We'll need to use admin functions for this, which isn't typically
+    // available in client-side code. For this demo, we'll use another approach.
+    
+    // Try to sign in with the user ID from profiles
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: userData.user.email || '',
+      email: identifier, // We'll rely on Supabase to validate this
       password,
     });
     

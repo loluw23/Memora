@@ -3,14 +3,9 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { Database } from '@/integrations/supabase/types';
 
-interface Profile {
-  id: string;
-  username: string;
-  avatar_url: string | null;
-  created_at: string;
-  updated_at: string;
-}
+type Profile = Database['public']['Tables']['profiles']['Row'];
 
 interface UserWithProfile extends User {
   profile?: Profile;
