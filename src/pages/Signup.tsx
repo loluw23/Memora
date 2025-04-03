@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { BookOpen, ArrowRight, Mail, Lock, User, Github, Google, CheckCircle } from 'lucide-react';
+import { BookOpen, ArrowRight, Mail, Lock, User, Github, CheckCircle } from 'lucide-react';
 
 const Signup = () => {
   const handleSubmit = (e: React.FormEvent) => {
@@ -88,8 +88,8 @@ const Signup = () => {
                 
                 <div className="mt-6 flex flex-col sm:flex-row gap-3">
                   <Button variant="outline" className="flex-1">
-                    <Google size={16} className="mr-2" />
-                    Google
+                    <Mail size={16} className="mr-2" />
+                    Email
                   </Button>
                   <Button variant="outline" className="flex-1">
                     <Github size={16} className="mr-2" />

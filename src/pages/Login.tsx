@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { BookOpen, ArrowRight, Mail, Lock, Github, Google } from 'lucide-react';
+import { BookOpen, ArrowRight, Mail, Lock, Github, Star as StarIcon } from 'lucide-react';
 
 const Login = () => {
   const handleSubmit = (e: React.FormEvent) => {
@@ -80,8 +80,8 @@ const Login = () => {
                 
                 <div className="mt-6 flex flex-col sm:flex-row gap-3">
                   <Button variant="outline" className="flex-1">
-                    <Google size={16} className="mr-2" />
-                    Google
+                    <Mail size={16} className="mr-2" />
+                    Email
                   </Button>
                   <Button variant="outline" className="flex-1">
                     <Github size={16} className="mr-2" />
@@ -120,7 +120,7 @@ const Login = () => {
                 </div>
                 <div className="ml-auto flex">
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <Star key={star} size={16} className="text-yellow-400 fill-yellow-400" />
+                    <StarIcon key={star} size={16} className="text-yellow-400 fill-yellow-400" />
                   ))}
                 </div>
               </div>
