@@ -28,19 +28,19 @@ const worksheetData = {
     {
       id: '1',
       question: 'When did World War I begin, and what was the immediate trigger?',
-      type: 'short-answer',
+      type: 'short-answer' as const,
       points: 2
     },
     {
       id: '2',
       question: 'Explain the causes and effects of the Industrial Revolution in Europe.',
-      type: 'long-answer',
+      type: 'long-answer' as const,
       points: 5
     },
     {
       id: '3',
       question: 'Which event marked the beginning of the Renaissance?',
-      type: 'multiple-choice',
+      type: 'multiple-choice' as const,
       choices: [
         'The Fall of Constantinople',
         'The Printing of the Gutenberg Bible',
@@ -52,13 +52,13 @@ const worksheetData = {
     {
       id: '4',
       question: 'What were the main achievements of the Ancient Egyptian civilization?',
-      type: 'long-answer',
+      type: 'long-answer' as const,
       points: 4
     },
     {
       id: '5',
       question: 'When was the Declaration of Independence signed?',
-      type: 'short-answer',
+      type: 'short-answer' as const,
       points: 1
     }
   ]
@@ -170,7 +170,7 @@ const WorksheetDetail = () => {
           </Card>
         ) : (
           <div className="space-y-6">
-            {worksheet.questions.map((question: Question, index) => (
+            {worksheet.questions.map((question, index) => (
               <Card key={question.id}>
                 <CardHeader className="pb-3">
                   <div className="flex items-start gap-3">
