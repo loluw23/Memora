@@ -1,20 +1,22 @@
 
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { BookOpen, ArrowRight, Mail, Lock, User, Github, CheckCircle } from 'lucide-react';
+import { BookOpen, ArrowRight, Mail, Github, CheckCircle } from 'lucide-react';
+import SignupForm from '@/components/auth/SignupForm';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Signup = () => {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // In a real app, this would create a new user account
-    window.location.href = '/app';
-  };
+  const { isAuthenticated, isLoading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated && !isLoading) {
+      navigate('/app');
+    }
+  }, [isAuthenticated, isLoading, navigate]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -40,45 +42,7 @@ const Signup = () => {
 
             <Card className="border-border/50">
               <CardContent className="pt-6">
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input id="name" type="text" placeholder="John Doe" className="pl-10" required />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input id="email" type="email" placeholder="you@example.com" className="pl-10" required />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input id="password" type="password" placeholder="••••••••" className="pl-10" required />
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Min. 8 characters with at least 1 number and 1 special character
-                    </p>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="terms" required />
-                    <Label htmlFor="terms" className="text-sm font-normal">
-                      I agree to the <Link to="#" className="text-memora-purple hover:underline">Terms of Service</Link> and <Link to="#" className="text-memora-purple hover:underline">Privacy Policy</Link>
-                    </Label>
-                  </div>
-                  
-                  <Button type="submit" className="w-full bg-memora-purple hover:bg-memora-purple/90">
-                    Create Account <ArrowRight size={16} className="ml-2" />
-                  </Button>
-                </form>
+                <SignupForm />
                 
                 <div className="mt-6 flex items-center">
                   <Separator className="flex-1" />
@@ -87,11 +51,11 @@ const Signup = () => {
                 </div>
                 
                 <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                  <Button variant="outline" className="flex-1">
+                  <Button variant="outline" className="flex-1" disabled>
                     <Mail size={16} className="mr-2" />
                     Email
                   </Button>
-                  <Button variant="outline" className="flex-1">
+                  <Button variant="outline" className="flex-1" disabled>
                     <Github size={16} className="mr-2" />
                     GitHub
                   </Button>

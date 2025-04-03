@@ -1,20 +1,22 @@
 
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { BookOpen, ArrowRight, Mail, Lock, Github, Star as StarIcon } from 'lucide-react';
+import { BookOpen, ArrowRight, Mail, Github, Star as StarIcon } from 'lucide-react';
+import LoginForm from '@/components/auth/LoginForm';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Login = () => {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // In a real app, this would authenticate the user
-    window.location.href = '/app';
-  };
+  const { isAuthenticated, isLoading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated && !isLoading) {
+      navigate('/app');
+    }
+  }, [isAuthenticated, isLoading, navigate]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -40,37 +42,7 @@ const Login = () => {
 
             <Card className="border-border/50">
               <CardContent className="pt-6">
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input id="email" type="email" placeholder="you@example.com" className="pl-10" required />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="password">Password</Label>
-                      <Link to="#" className="text-xs text-memora-purple hover:underline">
-                        Forgot password?
-                      </Link>
-                    </div>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input id="password" type="password" placeholder="••••••••" className="pl-10" required />
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="remember" />
-                    <Label htmlFor="remember" className="text-sm font-normal">Remember me for 30 days</Label>
-                  </div>
-                  
-                  <Button type="submit" className="w-full bg-memora-purple hover:bg-memora-purple/90">
-                    Sign in <ArrowRight size={16} className="ml-2" />
-                  </Button>
-                </form>
+                <LoginForm />
                 
                 <div className="mt-6 flex items-center">
                   <Separator className="flex-1" />
@@ -79,11 +51,11 @@ const Login = () => {
                 </div>
                 
                 <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                  <Button variant="outline" className="flex-1">
+                  <Button variant="outline" className="flex-1" disabled>
                     <Mail size={16} className="mr-2" />
                     Email
                   </Button>
-                  <Button variant="outline" className="flex-1">
+                  <Button variant="outline" className="flex-1" disabled>
                     <Github size={16} className="mr-2" />
                     GitHub
                   </Button>

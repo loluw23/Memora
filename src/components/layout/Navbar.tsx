@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, BarChart2, Settings, Search, User, Home, ArrowRight } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { BookOpen, BarChart2, Settings, Search, User, Home, ArrowRight, LogOut } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import UserAvatar from './UserAvatar';
 import { 
@@ -13,9 +13,23 @@ import {
   navigationMenuTriggerStyle
 } from "@/components/ui/navigation-menu";
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import { logout } from '@/services/auth';
+import { useToast } from '@/hooks/use-toast';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, user, refreshUser } = useAuth();
+  const { toast } = useToast();
   const isLandingPage = location.pathname === "/";
   
   // Function to refresh the page when clicking the logo on non-landing pages
@@ -23,6 +37,24 @@ const Navbar = () => {
     if (!isLandingPage) {
       e.preventDefault();
       window.location.reload();
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      await refreshUser();
+      toast({
+        title: 'Logged out',
+        description: 'You have successfully logged out',
+      });
+      navigate('/');
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: error.message || 'An error occurred while logging out',
+      });
     }
   };
 
@@ -131,42 +163,82 @@ const Navbar = () => {
           
           <div className="flex items-center gap-2">
             {isLandingPage ? (
-              <>
-                <Button 
-                  className="rounded-full bg-memora-purple hover:bg-memora-purple/90 animate-fade-in" 
-                  size="sm"
-                  asChild
-                  style={{ animationDelay: '0.3s' }}
-                >
-                  <Link to="/app">
-                    App <ArrowRight size={14} className="ml-1" />
-                  </Link>
-                </Button>
-                
-                <Button 
-                  className="rounded-full animate-fade-in" 
-                  size="sm"
-                  variant="outline"
-                  asChild
-                  style={{ animationDelay: '0.35s' }}
-                >
-                  <Link to="/login">
-                    Login
-                  </Link>
-                </Button>
-                
-                <Button 
-                  className="rounded-full animate-fade-in" 
-                  size="sm"
-                  variant="secondary"
-                  asChild
-                  style={{ animationDelay: '0.4s' }}
-                >
-                  <Link to="/signup">
-                    Sign Up
-                  </Link>
-                </Button>
-              </>
+              isAuthenticated ? (
+                <>
+                  <Button 
+                    className="rounded-full bg-memora-purple hover:bg-memora-purple/90 animate-fade-in" 
+                    size="sm"
+                    asChild
+                    style={{ animationDelay: '0.3s' }}
+                  >
+                    <Link to="/app">
+                      Dashboard <ArrowRight size={14} className="ml-1" />
+                    </Link>
+                  </Button>
+                  
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="p-0 h-8 w-8 rounded-full">
+                        <UserAvatar className="animate-fade-in" style={{ animationDelay: '0.35s' }} />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>
+                        {user?.profile?.username || 'Account'}
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/profile">Profile</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/settings">Settings</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={handleLogout} className="text-red-500">
+                        <LogOut size={14} className="mr-2" />
+                        Log out
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </>
+              ) : (
+                <>
+                  <Button 
+                    className="rounded-full bg-memora-purple hover:bg-memora-purple/90 animate-fade-in" 
+                    size="sm"
+                    asChild
+                    style={{ animationDelay: '0.3s' }}
+                  >
+                    <Link to="/app">
+                      App <ArrowRight size={14} className="ml-1" />
+                    </Link>
+                  </Button>
+                  
+                  <Button 
+                    className="rounded-full animate-fade-in" 
+                    size="sm"
+                    variant="outline"
+                    asChild
+                    style={{ animationDelay: '0.35s' }}
+                  >
+                    <Link to="/login">
+                      Login
+                    </Link>
+                  </Button>
+                  
+                  <Button 
+                    className="rounded-full animate-fade-in" 
+                    size="sm"
+                    variant="secondary"
+                    asChild
+                    style={{ animationDelay: '0.4s' }}
+                  >
+                    <Link to="/signup">
+                      Sign Up
+                    </Link>
+                  </Button>
+                </>
+              )
             ) : (
               <>
                 <Button 
@@ -193,9 +265,30 @@ const Navbar = () => {
                   </Link>
                 </Button>
                 
-                <Link to="/profile">
-                  <UserAvatar className="animate-fade-in" style={{ animationDelay: '0.5s' }} />
-                </Link>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="p-0 h-8 w-8 rounded-full">
+                      <UserAvatar className="animate-fade-in" style={{ animationDelay: '0.5s' }} />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>
+                      {user?.profile?.username || 'Account'}
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link to="/profile">Profile</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/settings">Settings</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout} className="text-red-500">
+                      <LogOut size={14} className="mr-2" />
+                      Log out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </>
             )}
           </div>
