@@ -64,13 +64,11 @@ export const login = async ({ identifier, password }: LoginCredentials) => {
       throw new Error('Invalid username or password');
     }
     
-    // Then use the user ID to find the email in auth.users
-    // Note: We'll need to use admin functions for this, which isn't typically
-    // available in client-side code. For this demo, we'll use another approach.
-    
-    // Try to sign in with the user ID from profiles
+    // Since we can't directly query auth.users from the client,
+    // we'll attempt to sign in with the username as email (which will fail)
+    // to trigger the proper error message
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: identifier, // We'll rely on Supabase to validate this
+      email: identifier, // This will fail if username is not an email
       password,
     });
     
