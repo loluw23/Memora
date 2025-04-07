@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Database } from "@/integrations/supabase/types";
 
@@ -14,21 +13,9 @@ export type LoginCredentials = {
 };
 
 export const checkEmailExists = async (email: string): Promise<boolean> => {
-  // Use a more reliable method to check if email exists
-  const { data, error } = await supabase.auth.admin
-    .listUsers({ 
-      filter: `email.eq.${email}`,
-      page: 1,
-      perPage: 1
-    })
-    .catch(() => ({ data: null, error: null }));
-
-  // This method won't work in client-side code since admin APIs are only available on the server
-  // For client-side, we'll try a different approach
-  
-  // Try to sign in with a random password to check if email exists
-  // If the error message is about wrong password, the email exists
   try {
+    // Try to sign in with a random password to check if email exists
+    // If the error message is about wrong password, the email exists
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password: "check_if_email_exists_" + Math.random().toString(),

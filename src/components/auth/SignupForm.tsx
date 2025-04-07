@@ -50,7 +50,7 @@ const SignupForm = () => {
       username: '',
       password: '',
       confirmPassword: '',
-      termsAccepted: false as any, // This is a temporary type assertion to fix the TypeScript error
+      termsAccepted: false,
     },
   });
 
@@ -59,9 +59,6 @@ const SignupForm = () => {
     setError(null);
 
     try {
-      // Skip the email and username checks as they're causing issues
-      // Instead, let the signUp function handle any duplicates
-
       const result = await signUp({
         email: values.email,
         password: values.password,
