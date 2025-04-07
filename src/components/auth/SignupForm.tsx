@@ -51,7 +51,7 @@ const SignupForm = () => {
       username: '',
       password: '',
       confirmPassword: '',
-      termsAccepted: false,
+      termsAccepted: false as any, // This is a temporary type assertion to fix the TypeScript error
     },
   });
 

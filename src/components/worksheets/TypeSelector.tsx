@@ -6,7 +6,7 @@ import {
   Calculator, 
   BookOpen, 
   Languages, 
-  AtomSymbol, 
+  Atom, 
   GraduationCap, 
   Globe, 
   Music, 
@@ -50,7 +50,7 @@ const worksheetTypes: WorksheetTypeOption[] = [
     id: 'science',
     name: 'Science',
     description: 'Biology, chemistry, and physics',
-    icon: <AtomSymbol className="h-6 w-6" />,
+    icon: <Atom className="h-6 w-6" />,
     colorClass: 'bg-purple-100 text-purple-600'
   },
   {
