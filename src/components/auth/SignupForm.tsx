@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -27,8 +28,8 @@ const signupSchema = z.object({
     .regex(/[a-z]/, { message: 'Password must contain at least one lowercase letter' })
     .regex(/[0-9]/, { message: 'Password must contain at least one number' }),
   confirmPassword: z.string(),
-  termsAccepted: z.literal(true, {
-    errorMap: () => ({ message: 'You must accept the Terms of Service to continue' }),
+  termsAccepted: z.boolean().refine(val => val === true, {
+    message: 'You must accept the Terms of Service to continue',
   }),
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'Passwords do not match',
