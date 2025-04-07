@@ -1,64 +1,137 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { FileText, ChevronRight } from 'lucide-react';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { FileText, Clock, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export interface Worksheet {
   id: string;
   title: string;
   description?: string;
-  questionCount: number;
-  estimatedTime: string;
-  completedCount: number;
+  questionCount?: number;
+  estimatedTime?: string;
+  completedCount?: number;
   lastScore?: number;
-  colorClass: string;
+  colorClass?: string;
+  subject?: string;
+  type?: string;
+  grade?: string;
+  createdAt?: string;
 }
 
 interface WorksheetPreviewProps {
   worksheet: Worksheet;
 }
 
-const WorksheetPreview = ({ worksheet }: WorksheetPreviewProps) => {
+const WorksheetPreview: React.FC<WorksheetPreviewProps> = ({ worksheet }) => {
+  const {
+    id,
+    title,
+    description,
+    questionCount,
+    estimatedTime,
+    completedCount,
+    lastScore,
+    colorClass = 'bg-memora-purple',
+    subject,
+    type,
+    grade
+  } = worksheet;
+
   return (
-    <Card className="overflow-hidden hover:shadow-md transition-shadow">
-      <CardContent className="p-0">
-        <div className="flex">
-          <div className={`${worksheet.colorClass} w-2`} />
-          <div className="flex-1 p-4">
-            <div className="flex justify-between items-start">
-              <div className="space-y-1">
-                <h4 className="font-semibold">{worksheet.title}</h4>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <FileText size={14} />
-                  <span>{worksheet.questionCount} questions • {worksheet.estimatedTime}</span>
-                </div>
-                {worksheet.description && (
-                  <p className="text-sm text-muted-foreground line-clamp-1">{worksheet.description}</p>
-                )}
-              </div>
-              <Button asChild variant="ghost" size="icon" className="h-8 w-8">
-                <Link to={`/worksheets/${worksheet.id}`}>
-                  <ChevronRight size={18} />
-                </Link>
-              </Button>
+    <Card className="h-full flex flex-col">
+      <CardHeader className={`text-white ${colorClass} rounded-t-lg`}>
+        <div className="flex justify-between items-start">
+          <h3 className="font-semibold text-lg">{title}</h3>
+          {subject && type && (
+            <div className="flex items-center space-x-2">
+              <span className="text-xs bg-white bg-opacity-30 rounded-full px-2 py-1">
+                {subject}
+              </span>
+              <span className="text-xs bg-white bg-opacity-30 rounded-full px-2 py-1">
+                {type}
+              </span>
             </div>
-            <div className="flex items-center justify-between mt-3">
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">
-                  Completed {worksheet.completedCount} time{worksheet.completedCount !== 1 ? 's' : ''}
-                </span>
-                {worksheet.lastScore !== undefined && (
-                  <span className="text-xs bg-muted px-1.5 py-0.5 rounded-full">
-                    Last: {worksheet.lastScore}%
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
+          )}
         </div>
+        {description && <p className="text-sm opacity-90">{description}</p>}
+      </CardHeader>
+      
+      <CardContent className="py-4 flex-grow">
+        <div className="flex items-center gap-4">
+          {questionCount !== undefined && (
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <FileText size={16} />
+              <span>{questionCount} Questions</span>
+            </div>
+          )}
+          
+          {estimatedTime && (
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <Clock size={16} />
+              <span>{estimatedTime}</span>
+            </div>
+          )}
+          
+          {grade && (
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <Award size={16} />
+              <span>Grade {grade}</span>
+            </div>
+          )}
+        </div>
+        
+        {completedCount !== undefined && (
+          <div className="mt-4">
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-muted-foreground">
+                {completedCount > 0 
+                  ? `Completed ${completedCount} ${completedCount === 1 ? 'time' : 'times'}`
+                  : 'Not completed yet'
+                }
+              </span>
+              {lastScore !== undefined && completedCount > 0 && (
+                <span className="font-medium">
+                  Last score: {lastScore}%
+                </span>
+              )}
+            </div>
+            
+            {completedCount > 0 && (
+              <div className="w-full h-2 bg-gray-100 rounded-full mt-2">
+                <div 
+                  className="h-2 bg-green-500 rounded-full" 
+                  style={{width: `${lastScore}%`}}
+                />
+              </div>
+            )}
+          </div>
+        )}
       </CardContent>
+      
+      <CardFooter className="pt-0">
+        <div className="w-full flex gap-3">
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="flex-1"
+            asChild
+          >
+            <Link to={`/worksheets/${id}/preview`}>Preview</Link>
+          </Button>
+          
+          <Button 
+            size="sm"
+            className="flex-1 bg-memora-purple hover:bg-memora-purple/90"
+            asChild
+          >
+            <Link to={`/worksheets/${id}`}>
+              {completedCount && completedCount > 0 ? 'Retry' : 'Start'}
+            </Link>
+          </Button>
+        </div>
+      </CardFooter>
     </Card>
   );
 };

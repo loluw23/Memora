@@ -1,0 +1,533 @@
+
+// Utility to generate math problems based on options
+interface MathGenerationOptions {
+  grade: string;
+  topics: string[];
+  difficulty: string;
+  questionCount: number;
+  includeGeometricShapes: boolean;
+  include3dFigures: boolean;
+}
+
+interface Question {
+  question: string;
+  answer: string;
+  explanation?: string;
+  figure?: string; // For geometric questions, this would be a description of the shape/figure
+}
+
+interface GeneratedWorksheet {
+  title: string;
+  instructions: string;
+  specialMessage?: string;
+  questions: Question[];
+  answerKey: { [key: number]: string };
+}
+
+// Generate a random number within a range
+const randomInt = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+// Generate addition problems based on grade level
+const generateAdditionProblems = (grade: string, count: number, difficulty: string): Question[] => {
+  const questions: Question[] = [];
+  
+  // Set limits based on grade level and difficulty
+  let min = 1;
+  let max = 10;
+  
+  if (grade === '1') {
+    max = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 30;
+  } else if (grade === '2') {
+    max = difficulty === 'easy' ? 20 : difficulty === 'medium' ? 50 : 100;
+  } else if (grade === '3') {
+    max = difficulty === 'easy' ? 50 : difficulty === 'medium' ? 100 : 500;
+  } else if (grade === '4') {
+    max = difficulty === 'easy' ? 100 : difficulty === 'medium' ? 500 : 1000;
+  } else {
+    max = difficulty === 'easy' ? 500 : difficulty === 'medium' ? 1000 : 10000;
+  }
+  
+  for (let i = 0; i < count; i++) {
+    const num1 = randomInt(min, max);
+    const num2 = randomInt(min, max);
+    const answer = num1 + num2;
+    
+    questions.push({
+      question: `${num1} + ${num2} = ?`,
+      answer: answer.toString(),
+      explanation: `Add ${num1} and ${num2} to get ${answer}`
+    });
+  }
+  
+  return questions;
+};
+
+// Generate subtraction problems based on grade level
+const generateSubtractionProblems = (grade: string, count: number, difficulty: string): Question[] => {
+  const questions: Question[] = [];
+  
+  // Set limits based on grade level and difficulty
+  let min = 1;
+  let max = 10;
+  
+  if (grade === '1') {
+    max = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 30;
+  } else if (grade === '2') {
+    max = difficulty === 'easy' ? 20 : difficulty === 'medium' ? 50 : 100;
+  } else if (grade === '3') {
+    max = difficulty === 'easy' ? 50 : difficulty === 'medium' ? 100 : 500;
+  } else if (grade === '4') {
+    max = difficulty === 'easy' ? 100 : difficulty === 'medium' ? 500 : 1000;
+  } else {
+    max = difficulty === 'easy' ? 500 : difficulty === 'medium' ? 1000 : 10000;
+  }
+  
+  for (let i = 0; i < count; i++) {
+    // For subtraction, make sure the first number is larger to avoid negative results
+    // for lower grades
+    let num1, num2;
+    if (Number(grade) <= 3 || difficulty === 'easy') {
+      num1 = randomInt(min, max);
+      num2 = randomInt(min, num1); // Ensure num2 <= num1 to avoid negative numbers
+    } else {
+      num1 = randomInt(min, max);
+      num2 = randomInt(min, max);
+    }
+    
+    const answer = num1 - num2;
+    
+    questions.push({
+      question: `${num1} - ${num2} = ?`,
+      answer: answer.toString(),
+      explanation: `Subtract ${num2} from ${num1} to get ${answer}`
+    });
+  }
+  
+  return questions;
+};
+
+// Generate multiplication problems based on grade level
+const generateMultiplicationProblems = (grade: string, count: number, difficulty: string): Question[] => {
+  const questions: Question[] = [];
+  
+  // Set limits based on grade level and difficulty
+  let min = 1;
+  let max = 5;
+  
+  if (grade === '3') {
+    max = difficulty === 'easy' ? 5 : difficulty === 'medium' ? 10 : 12;
+  } else if (grade === '4') {
+    max = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 12 : 15;
+  } else if (grade === '5') {
+    max = difficulty === 'easy' ? 12 : difficulty === 'medium' ? 15 : 20;
+  } else {
+    max = difficulty === 'easy' ? 15 : difficulty === 'medium' ? 20 : 30;
+  }
+  
+  for (let i = 0; i < count; i++) {
+    const num1 = randomInt(min, max);
+    const num2 = randomInt(min, max);
+    const answer = num1 * num2;
+    
+    questions.push({
+      question: `${num1} × ${num2} = ?`,
+      answer: answer.toString(),
+      explanation: `Multiply ${num1} by ${num2} to get ${answer}`
+    });
+  }
+  
+  return questions;
+};
+
+// Generate division problems based on grade level
+const generateDivisionProblems = (grade: string, count: number, difficulty: string): Question[] => {
+  const questions: Question[] = [];
+  
+  // Set limits based on grade level and difficulty
+  let min = 1;
+  let max = 10;
+  let allowRemainders = false;
+  
+  if (grade === '3') {
+    max = difficulty === 'easy' ? 5 : difficulty === 'medium' ? 10 : 12;
+    allowRemainders = difficulty === 'hard';
+  } else if (grade === '4') {
+    max = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 12 : 15;
+    allowRemainders = difficulty !== 'easy';
+  } else {
+    max = difficulty === 'easy' ? 12 : difficulty === 'medium' ? 20 : 30;
+    allowRemainders = true;
+  }
+  
+  for (let i = 0; i < count; i++) {
+    let num1, num2, answer, question;
+    
+    if (allowRemainders) {
+      // With remainders
+      num1 = randomInt(min, max * max);
+      num2 = randomInt(min, max);
+      const quotient = Math.floor(num1 / num2);
+      const remainder = num1 % num2;
+      
+      if (remainder === 0) {
+        question = `${num1} ÷ ${num2} = ?`;
+        answer = quotient.toString();
+      } else {
+        question = `${num1} ÷ ${num2} = ? (Give quotient and remainder)`;
+        answer = `${quotient} R ${remainder}`;
+      }
+    } else {
+      // Without remainders - make sure division is clean
+      num2 = randomInt(min, max);
+      const quotient = randomInt(min, max);
+      num1 = num2 * quotient;
+      
+      question = `${num1} ÷ ${num2} = ?`;
+      answer = quotient.toString();
+    }
+    
+    questions.push({
+      question,
+      answer,
+      explanation: `Divide ${num1} by ${num2} to get ${answer}`
+    });
+  }
+  
+  return questions;
+};
+
+// Generate fraction problems
+const generateFractionProblems = (grade: string, count: number, difficulty: string): Question[] => {
+  const questions: Question[] = [];
+  
+  // Define types of fraction problems based on grade
+  let operations: string[] = [];
+  
+  if (grade === '3') {
+    operations = ['identify', 'compare'];
+  } else if (grade === '4') {
+    operations = ['identify', 'compare', 'add-same-denominator', 'subtract-same-denominator'];
+  } else if (grade === '5') {
+    operations = ['add-same-denominator', 'subtract-same-denominator', 'add-different-denominator', 'subtract-different-denominator'];
+  } else {
+    operations = ['add-different-denominator', 'subtract-different-denominator', 'multiply', 'divide'];
+  }
+  
+  for (let i = 0; i < count; i++) {
+    const operation = operations[randomInt(0, operations.length - 1)];
+    let question, answer;
+    
+    switch (operation) {
+      case 'identify':
+        // Create a fraction identification question
+        const denominator = randomInt(2, 12);
+        const numerator = randomInt(1, denominator - 1);
+        question = `What fraction is represented by the shaded portion? (${numerator} parts out of ${denominator} total parts)`;
+        answer = `${numerator}/${denominator}`;
+        break;
+        
+      case 'compare':
+        // Create a fraction comparison question
+        const denom1 = randomInt(2, 10);
+        const numer1 = randomInt(1, denom1);
+        const denom2 = randomInt(2, 10);
+        const numer2 = randomInt(1, denom2);
+        question = `Compare the fractions ${numer1}/${denom1} and ${numer2}/${denom2} using <, >, or =.`;
+        
+        const value1 = numer1 / denom1;
+        const value2 = numer2 / denom2;
+        if (value1 < value2) {
+          answer = `${numer1}/${denom1} < ${numer2}/${denom2}`;
+        } else if (value1 > value2) {
+          answer = `${numer1}/${denom1} > ${numer2}/${denom2}`;
+        } else {
+          answer = `${numer1}/${denom1} = ${numer2}/${denom2}`;
+        }
+        break;
+        
+      case 'add-same-denominator':
+        // Addition with same denominator
+        const denomSame = randomInt(2, 12);
+        const numer1Same = randomInt(1, denomSame - 1);
+        const numer2Same = randomInt(1, denomSame - 1);
+        question = `${numer1Same}/${denomSame} + ${numer2Same}/${denomSame} = ?`;
+        
+        let sumNumer = numer1Same + numer2Same;
+        let sumDenom = denomSame;
+        
+        // Simplify fraction if possible
+        const gcdSum = gcd(sumNumer, sumDenom);
+        if (gcdSum > 1) {
+          sumNumer /= gcdSum;
+          sumDenom /= gcdSum;
+        }
+        
+        answer = `${sumNumer}/${sumDenom}`;
+        if (sumNumer >= sumDenom) {
+          const whole = Math.floor(sumNumer / sumDenom);
+          const remainder = sumNumer % sumDenom;
+          answer = remainder === 0 ? `${whole}` : `${whole} ${remainder}/${sumDenom}`;
+        }
+        break;
+        
+      case 'subtract-same-denominator':
+        // Subtraction with same denominator
+        const denomSubSame = randomInt(2, 12);
+        const numer1SubSame = randomInt(2, 12);
+        const numer2SubSame = randomInt(1, numer1SubSame);
+        question = `${numer1SubSame}/${denomSubSame} - ${numer2SubSame}/${denomSubSame} = ?`;
+        
+        let diffNumer = numer1SubSame - numer2SubSame;
+        let diffDenom = denomSubSame;
+        
+        // Simplify fraction if possible
+        const gcdDiff = gcd(diffNumer, diffDenom);
+        if (gcdDiff > 1) {
+          diffNumer /= gcdDiff;
+          diffDenom /= gcdDiff;
+        }
+        
+        answer = `${diffNumer}/${diffDenom}`;
+        break;
+        
+      case 'add-different-denominator':
+      case 'subtract-different-denominator':
+      case 'multiply':
+      case 'divide':
+        // These operations are more complex and would require more detailed implementation
+        // For now, we'll use placeholder questions
+        if (operation === 'add-different-denominator') {
+          question = `Add the fractions: 1/4 + 2/3 = ?`;
+          answer = `11/12`;
+        } else if (operation === 'subtract-different-denominator') {
+          question = `Subtract the fractions: 3/4 - 1/6 = ?`;
+          answer = `7/12`;
+        } else if (operation === 'multiply') {
+          question = `Multiply the fractions: 2/3 × 3/5 = ?`;
+          answer = `6/15 = 2/5`;
+        } else {
+          question = `Divide the fractions: 2/3 ÷ 4/5 = ?`;
+          answer = `10/12 = 5/6`;
+        }
+        break;
+    }
+    
+    questions.push({
+      question,
+      answer,
+      explanation: `Follow the rules for ${operation.replace(/-/g, ' ')} fractions to get ${answer}`
+    });
+  }
+  
+  return questions;
+};
+
+// Generate geometry problems
+const generateGeometryProblems = (grade: string, count: number, difficulty: string, includeShapes: boolean, include3dFigures: boolean): Question[] => {
+  const questions: Question[] = [];
+  
+  // Define types of geometry problems based on grade
+  let problemTypes: string[] = [];
+  
+  if (grade === '1' || grade === '2') {
+    problemTypes = ['identify-2d', 'count-sides'];
+  } else if (grade === '3' || grade === '4') {
+    problemTypes = ['identify-2d', 'count-sides', 'perimeter', 'area-rectangle'];
+    if (include3dFigures) {
+      problemTypes.push('identify-3d');
+    }
+  } else if (grade === '5' || grade === '6') {
+    problemTypes = ['perimeter', 'area-rectangle', 'area-triangle'];
+    if (include3dFigures) {
+      problemTypes.push('identify-3d', 'volume-cube');
+    }
+  } else {
+    problemTypes = ['area-complex', 'perimeter-complex'];
+    if (include3dFigures) {
+      problemTypes.push('volume-complex', 'surface-area');
+    }
+  }
+  
+  const shapes2D = ['square', 'rectangle', 'triangle', 'circle', 'pentagon', 'hexagon'];
+  const shapes3D = ['cube', 'rectangular prism', 'sphere', 'cylinder', 'cone', 'pyramid'];
+  
+  for (let i = 0; i < count; i++) {
+    const problemType = problemTypes[randomInt(0, problemTypes.length - 1)];
+    let question, answer, figure;
+    
+    switch (problemType) {
+      case 'identify-2d':
+        const shape2D = shapes2D[randomInt(0, shapes2D.length - 1)];
+        question = `Name this 2D shape.`;
+        answer = shape2D;
+        figure = `[A ${shape2D} is shown]`;
+        break;
+        
+      case 'identify-3d':
+        const shape3D = shapes3D[randomInt(0, shapes3D.length - 1)];
+        question = `Name this 3D figure.`;
+        answer = shape3D;
+        figure = `[A ${shape3D} is shown]`;
+        break;
+        
+      case 'count-sides':
+        const sideShape = shapes2D[randomInt(0, shapes2D.length - 1)];
+        let sides;
+        switch (sideShape) {
+          case 'triangle': sides = 3; break;
+          case 'square': sides = 4; break;
+          case 'rectangle': sides = 4; break;
+          case 'pentagon': sides = 5; break;
+          case 'hexagon': sides = 6; break;
+          default: sides = 0; // circle has 0 sides
+        }
+        question = `How many sides does a ${sideShape} have?`;
+        answer = sides.toString();
+        if (includeShapes) {
+          figure = `[A ${sideShape} is shown]`;
+        }
+        break;
+        
+      case 'perimeter':
+        // Simple perimeter question
+        const length = randomInt(2, 10);
+        const width = randomInt(2, 10);
+        question = `Find the perimeter of a rectangle with length ${length} units and width ${width} units.`;
+        answer = `${2 * (length + width)} units`;
+        if (includeShapes) {
+          figure = `[A rectangle with length ${length} and width ${width} is shown]`;
+        }
+        break;
+        
+      case 'area-rectangle':
+        // Area of rectangle
+        const areaLength = randomInt(2, 10);
+        const areaWidth = randomInt(2, 10);
+        question = `Find the area of a rectangle with length ${areaLength} units and width ${areaWidth} units.`;
+        answer = `${areaLength * areaWidth} square units`;
+        if (includeShapes) {
+          figure = `[A rectangle with length ${areaLength} and width ${areaWidth} is shown]`;
+        }
+        break;
+        
+      case 'area-triangle':
+        // Area of triangle
+        const base = randomInt(2, 10);
+        const height = randomInt(2, 10);
+        question = `Find the area of a triangle with base ${base} units and height ${height} units.`;
+        answer = `${(base * height) / 2} square units`;
+        if (includeShapes) {
+          figure = `[A triangle with base ${base} and height ${height} is shown]`;
+        }
+        break;
+        
+      case 'volume-cube':
+        // Volume of a cube
+        const side = randomInt(2, 8);
+        question = `Find the volume of a cube with side length ${side} units.`;
+        answer = `${side * side * side} cubic units`;
+        if (includeShapes && include3dFigures) {
+          figure = `[A cube with side length ${side} is shown]`;
+        }
+        break;
+        
+      case 'volume-complex':
+      case 'area-complex':
+      case 'perimeter-complex':
+      case 'surface-area':
+        // These would be more complex problems for higher grades
+        question = `For a ${problemType.replace(/-/g, ' ')} problem...`;
+        answer = `Answer would depend on specific problem`;
+        break;
+    }
+    
+    questions.push({
+      question,
+      answer,
+      explanation: `Apply the formula for ${problemType.replace(/-/g, ' ')} to get ${answer}`,
+      figure: includeShapes ? figure : undefined
+    });
+  }
+  
+  return questions;
+};
+
+// Greatest Common Divisor (for fraction simplification)
+function gcd(a: number, b: number): number {
+  return b === 0 ? a : gcd(b, a % b);
+}
+
+// Generate math worksheet based on options
+export const generateMathWorksheet = (
+  options: MathGenerationOptions, 
+  title: string, 
+  instructions: string,
+  specialMessage?: string
+): GeneratedWorksheet => {
+  const { grade, topics, difficulty, questionCount, includeGeometricShapes, include3dFigures } = options;
+  let questions: Question[] = [];
+  
+  // Calculate questions per topic
+  const topicsCount = topics.length;
+  const questionsPerTopic = Math.floor(questionCount / topicsCount);
+  let remainingQuestions = questionCount - (questionsPerTopic * topicsCount);
+  
+  // Generate questions for each selected topic
+  for (const topic of topics) {
+    const topicQuestionCount = questionsPerTopic + (remainingQuestions > 0 ? 1 : 0);
+    if (remainingQuestions > 0) remainingQuestions--;
+    
+    switch (topic) {
+      case 'addition':
+        questions = [...questions, ...generateAdditionProblems(grade, topicQuestionCount, difficulty)];
+        break;
+      case 'subtraction':
+        questions = [...questions, ...generateSubtractionProblems(grade, topicQuestionCount, difficulty)];
+        break;
+      case 'multiplication':
+        questions = [...questions, ...generateMultiplicationProblems(grade, topicQuestionCount, difficulty)];
+        break;
+      case 'division':
+        questions = [...questions, ...generateDivisionProblems(grade, topicQuestionCount, difficulty)];
+        break;
+      case 'fractions':
+        questions = [...questions, ...generateFractionProblems(grade, topicQuestionCount, difficulty)];
+        break;
+      case 'geometry':
+        questions = [...questions, ...generateGeometryProblems(grade, topicQuestionCount, difficulty, includeGeometricShapes, include3dFigures)];
+        break;
+      // Add more topics as needed
+    }
+  }
+  
+  // Shuffle questions if mixed difficulty or topics
+  if (topics.length > 1 || difficulty === 'mixed') {
+    questions = shuffleArray(questions);
+  }
+  
+  // Create answer key
+  const answerKey: { [key: number]: string } = {};
+  questions.forEach((q, index) => {
+    answerKey[index + 1] = q.answer;
+  });
+  
+  return {
+    title,
+    instructions,
+    specialMessage,
+    questions,
+    answerKey
+  };
+};
+
+// Utility function to shuffle an array
+function shuffleArray<T>(array: T[]): T[] {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+}
