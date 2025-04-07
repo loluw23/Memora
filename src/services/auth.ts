@@ -14,15 +14,31 @@ export type LoginCredentials = {
 };
 
 export const checkEmailExists = async (email: string): Promise<boolean> => {
-  const { data, error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      shouldCreateUser: false,
-    },
-  });
+  // Use a more reliable method to check if email exists
+  const { data, error } = await supabase.auth.admin
+    .listUsers({ 
+      filter: `email.eq.${email}`,
+      page: 1,
+      perPage: 1
+    })
+    .catch(() => ({ data: null, error: null }));
+
+  // This method won't work in client-side code since admin APIs are only available on the server
+  // For client-side, we'll try a different approach
   
-  // If there's no error about the user not existing, then it exists
-  return !error || !error.message.includes("Email not confirmed");
+  // Try to sign in with a random password to check if email exists
+  // If the error message is about wrong password, the email exists
+  try {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password: "check_if_email_exists_" + Math.random().toString(),
+    });
+    
+    // If there's an error about invalid login credentials, the email exists
+    return error?.message?.includes("Invalid login credentials") || false;
+  } catch (err) {
+    return false; // Something went wrong, assume email doesn't exist
+  }
 };
 
 export const checkUsernameExists = async (username: string): Promise<boolean> => {

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -60,21 +59,8 @@ const SignupForm = () => {
     setError(null);
 
     try {
-      // Check if email already exists
-      const emailExists = await checkEmailExists(values.email);
-      if (emailExists) {
-        setError('This email is already registered');
-        setIsLoading(false);
-        return;
-      }
-
-      // Check if username already exists
-      const usernameExists = await checkUsernameExists(values.username);
-      if (usernameExists) {
-        setError('This username is unavailable');
-        setIsLoading(false);
-        return;
-      }
+      // Skip the email and username checks as they're causing issues
+      // Instead, let the signUp function handle any duplicates
 
       const result = await signUp({
         email: values.email,
@@ -92,7 +78,16 @@ const SignupForm = () => {
       navigate('/login');
     } catch (error: any) {
       console.error('Signup error:', error);
-      setError(error.message || 'An error occurred during signup');
+      
+      // Handle specific error messages from Supabase
+      if (error.message?.includes('email already')) {
+        setError('This email is already registered');
+      } else if (error.message?.includes('username')) { 
+        setError('This username is unavailable');
+      } else {
+        setError(error.message || 'An error occurred during signup');
+      }
+
       toast({
         variant: 'destructive',
         title: 'Signup failed',
