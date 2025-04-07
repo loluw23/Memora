@@ -4,13 +4,15 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useNavigate } from 'react-router-dom';
-import { signUp } from '@/services/auth';
+import { signUp, checkEmailExists, checkUsernameExists } from '@/services/auth';
 import { useToast } from '@/hooks/use-toast';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Link } from 'react-router-dom';
 
 const signupSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -26,6 +28,9 @@ const signupSchema = z.object({
     .regex(/[a-z]/, { message: 'Password must contain at least one lowercase letter' })
     .regex(/[0-9]/, { message: 'Password must contain at least one number' }),
   confirmPassword: z.string(),
+  termsAccepted: z.literal(true, {
+    errorMap: () => ({ message: 'You must accept the Terms of Service to continue' }),
+  }),
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'Passwords do not match',
   path: ['confirmPassword'],
@@ -46,6 +51,7 @@ const SignupForm = () => {
       username: '',
       password: '',
       confirmPassword: '',
+      termsAccepted: false,
     },
   });
 
@@ -54,6 +60,22 @@ const SignupForm = () => {
     setError(null);
 
     try {
+      // Check if email already exists
+      const emailExists = await checkEmailExists(values.email);
+      if (emailExists) {
+        setError('This email is already registered');
+        setIsLoading(false);
+        return;
+      }
+
+      // Check if username already exists
+      const usernameExists = await checkUsernameExists(values.username);
+      if (usernameExists) {
+        setError('This username is unavailable');
+        setIsLoading(false);
+        return;
+      }
+
       const result = await signUp({
         email: values.email,
         password: values.password,
@@ -144,6 +166,27 @@ const SignupForm = () => {
                   <Input type="password" placeholder="••••••••" {...field} />
                 </FormControl>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="termsAccepted"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md pt-3">
+                <FormControl>
+                  <Checkbox 
+                    checked={field.value} 
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>
+                    I accept the <Link to="/terms" className="text-memora-purple hover:underline">Terms of Service</Link>
+                  </FormLabel>
+                  <FormMessage />
+                </div>
               </FormItem>
             )}
           />

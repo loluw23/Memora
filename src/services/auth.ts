@@ -13,6 +13,31 @@ export type LoginCredentials = {
   password: string;
 };
 
+export const checkEmailExists = async (email: string): Promise<boolean> => {
+  const { data, error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      shouldCreateUser: false,
+    },
+  });
+  
+  // If there's no error about the user not existing, then it exists
+  return !error || !error.message.includes("Email not confirmed");
+};
+
+export const checkUsernameExists = async (username: string): Promise<boolean> => {
+  const { count, error } = await supabase
+    .from('profiles')
+    .select('*', { count: 'exact', head: true })
+    .eq('username', username);
+  
+  if (error) {
+    throw error;
+  }
+  
+  return count !== null && count > 0;
+};
+
 export const signUp = async ({ email, password, username }: SignUpCredentials) => {
   // Add the username to the user metadata
   const { data, error } = await supabase.auth.signUp({

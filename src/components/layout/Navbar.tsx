@@ -150,6 +150,19 @@ const Navbar = () => {
                     Stats
                   </Link>
                 </NavigationMenuItem>
+
+                {isAuthenticated && (
+                  <NavigationMenuItem>
+                    <Button 
+                      onClick={handleLogout}
+                      className={navigationMenuTriggerStyle()} 
+                      variant="ghost"
+                    >
+                      <LogOut size={16} className="mr-1" />
+                      Sign Out
+                    </Button>
+                  </NavigationMenuItem>
+                )}
               </NavigationMenuList>
             </NavigationMenu>
           ) : null}
@@ -174,6 +187,17 @@ const Navbar = () => {
                     <Link to="/app">
                       Dashboard <ArrowRight size={14} className="ml-1" />
                     </Link>
+                  </Button>
+
+                  <Button 
+                    className="rounded-full text-red-500 hover:bg-red-50 animate-fade-in" 
+                    size="sm"
+                    variant="outline"
+                    onClick={handleLogout}
+                    style={{ animationDelay: '0.35s' }}
+                  >
+                    <LogOut size={14} className="mr-1" />
+                    Sign Out
                   </Button>
                   
                   <DropdownMenu>
@@ -263,6 +287,17 @@ const Navbar = () => {
                   <Link to="/settings">
                     <Settings size={20} />
                   </Link>
+                </Button>
+                
+                <Button
+                  className="p-2 rounded-full text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors animate-fade-in"
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleLogout}
+                  style={{ animationDelay: '0.45s' }}
+                >
+                  <LogOut size={18} className="mr-1" />
+                  Sign Out
                 </Button>
                 
                 <DropdownMenu>
