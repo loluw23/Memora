@@ -39,7 +39,12 @@ const CreateWorksheet = () => {
     questionCount: 10,
     spacing: 3,
     showAnswerKey: true,
-    topics: ['addition', 'subtraction']
+    topics: ['addition', 'subtraction'],
+    specialMessage: '',
+    instructions: '',
+    includeGeometricShapes: false,
+    include3dFigures: false,
+    coverAllTopics: false
   });
   const [showTypeSelector, setShowTypeSelector] = useState(true);
   

@@ -32,11 +32,13 @@ const Navbar = () => {
   const { toast } = useToast();
   const isLandingPage = location.pathname === "/";
   
-  // Function to refresh the page when clicking the logo on non-landing pages
+  // Function to handle logo click - always navigate to dashboard if authenticated
   const handleLogoClick = (e: React.MouseEvent) => {
-    if (!isLandingPage) {
-      e.preventDefault();
-      window.location.reload();
+    e.preventDefault();
+    if (isAuthenticated) {
+      navigate('/app');
+    } else if (!isLandingPage) {
+      navigate('/');
     }
   };
 
@@ -63,7 +65,7 @@ const Navbar = () => {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
           <Link 
-            to={isLandingPage ? "/" : "#"} 
+            to="#"
             onClick={handleLogoClick}
             className="flex items-center gap-2 animate-fade-in"
           >
