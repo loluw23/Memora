@@ -12,10 +12,49 @@ export type LoginCredentials = {
   password: string;
 };
 
+export const signUp = async ({ email, password, username }: SignUpCredentials) => {
+  // First, check if the username already exists
+  const { data: existingProfiles, error: profileError } = await supabase
+    .from('profiles')
+    .select('username')
+    .eq('username', username)
+    .limit(1);
+  
+  if (profileError) {
+    throw new Error('Error checking username availability');
+  }
+  
+  if (existingProfiles && existingProfiles.length > 0) {
+    throw new Error('This username is already taken');
+  }
+  
+  // Then sign up with Supabase auth
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        username,
+      },
+    },
+  });
+  
+  if (error) {
+    // Handle specific error cases
+    if (error.message?.includes('email already')) {
+      throw new Error('This email is already registered');
+    }
+    throw error;
+  }
+  
+  // The handle_new_user database trigger should create the profile
+  // Return the created user data
+  return data;
+};
+
 export const checkEmailExists = async (email: string): Promise<boolean> => {
   try {
     // Try to sign in with a random password to check if email exists
-    // If the error message is about wrong password, the email exists
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password: "check_if_email_exists_" + Math.random().toString(),
@@ -39,25 +78,6 @@ export const checkUsernameExists = async (username: string): Promise<boolean> =>
   }
   
   return count !== null && count > 0;
-};
-
-export const signUp = async ({ email, password, username }: SignUpCredentials) => {
-  // Add the username to the user metadata
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        username,
-      },
-    },
-  });
-  
-  if (error) {
-    throw error;
-  }
-  
-  return data;
 };
 
 export const login = async ({ identifier, password }: LoginCredentials) => {

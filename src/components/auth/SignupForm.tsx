@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useNavigate } from 'react-router-dom';
-import { signUp, checkEmailExists, checkUsernameExists } from '@/services/auth';
+import { signUp } from '@/services/auth';
 import { useToast } from '@/hooks/use-toast';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -60,13 +60,13 @@ const SignupForm = () => {
     setError(null);
 
     try {
-      const result = await signUp({
+      await signUp({
         email: values.email,
         password: values.password,
         username: values.username,
       });
-
-      console.log('Signup successful:', result);
+      
+      console.log('Signup successful');
       
       toast({
         title: 'Account created successfully',
@@ -77,14 +77,7 @@ const SignupForm = () => {
     } catch (error: any) {
       console.error('Signup error:', error);
       
-      // Handle specific error messages from Supabase
-      if (error.message?.includes('email already')) {
-        setError('This email is already registered');
-      } else if (error.message?.includes('username')) { 
-        setError('This username is unavailable');
-      } else {
-        setError(error.message || 'An error occurred during signup');
-      }
+      setError(error.message || 'An error occurred during signup');
 
       toast({
         variant: 'destructive',
