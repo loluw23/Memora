@@ -80,7 +80,8 @@ const GeneratedWorksheetView: React.FC<GeneratedWorksheetViewProps> = ({
         .answer-item { margin-bottom: 4px; }
         .worksheet-footer { text-align: center; margin-top: 30px; border-top: 1px solid #ddd; padding-top: 10px; font-size: 12px; color: #666; }
         .question-figure { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; }
-        .questions-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .questions-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .grid-item { text-align: center; padding: 8px 4px; }
         @media print {
           .no-print { display: none; }
         }
@@ -147,6 +148,22 @@ const GeneratedWorksheetView: React.FC<GeneratedWorksheetViewProps> = ({
     }
   };
 
+  // Format the problems into a grid
+  const renderQuestionsGrid = () => {
+    return (
+      <div className="questions-grid">
+        {questions.map((question, index) => (
+          <div key={index} className="grid-item">
+            {question.question}
+            {showAnswers && (
+              <div className="text-green-600 mt-1">{question.answer}</div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -211,33 +228,8 @@ const GeneratedWorksheetView: React.FC<GeneratedWorksheetViewProps> = ({
               </div>
             </div>
             
-            <div className={`worksheet-questions ${getSpacingClass()}`}>
-              {questions.map((question, index) => (
-                <div key={index} className="question-item">
-                  <div className="question-text">
-                    <span className="question-number font-medium">{index + 1}.</span>
-                    <span>{question.question}</span>
-                  </div>
-                  
-                  {question.figure && (
-                    <div className="question-figure mt-2 p-4 border border-dashed rounded-md bg-gray-50 text-center">
-                      {question.figure}
-                    </div>
-                  )}
-                  
-                  {showAnswers && (
-                    <div className="answer-text mt-2 text-green-600">
-                      <span className="font-medium">Answer:</span> {question.answer}
-                      {question.explanation && (
-                        <div className="text-sm text-gray-600 mt-1">{question.explanation}</div>
-                      )}
-                    </div>
-                  )}
-                  
-                  <div className="answer-line mt-3 border-b border-gray-300"></div>
-                </div>
-              ))}
-            </div>
+            {/* Use the grid layout for questions instead of list */}
+            {renderQuestionsGrid()}
             
             {includeFooter && (
               <div className="worksheet-footer text-center mt-8 pt-4 border-t text-sm text-gray-500">

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,6 +22,7 @@ import WorksheetTypeSelector from './WorksheetTypeSelector';
 import MathOptions from './MathOptions';
 import ExportOptions from './ExportOptions';
 import GeneratedWorksheetView from './GeneratedWorksheetView';
+import MathGridWorksheet from './MathGridWorksheet';
 import { generateMathWorksheet } from '@/services/worksheetGenerator';
 
 interface QuestionType {
@@ -51,6 +53,14 @@ const CreateWorksheet = () => {
     includeGeometricShapes: false,
     include3dFigures: false,
     coverAllTopics: false
+  });
+  const [mathGridOptions, setMathGridOptions] = useState({
+    numProblems: 100,
+    maxNumber: 20,
+    minNumber: 0,
+    columns: 4,
+    operations: ['addition', 'subtraction', 'multiplication', 'division'],
+    showAnswers: false
   });
   const [generatedWorksheet, setGeneratedWorksheet] = useState<any>(null);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
@@ -141,18 +151,23 @@ const CreateWorksheet = () => {
   const handleGenerateWorksheet = () => {
     if (worksheetSubject === 'math') {
       try {
-        const instructions = mathOptions.instructions || `Complete the following math problems. Show your work when necessary.`;
-        const worksheetTitle = title || `Grade ${mathOptions.grade} ${mathOptions.difficulty.charAt(0).toUpperCase() + mathOptions.difficulty.slice(1)} Math Worksheet`;
-        
-        const worksheet = generateMathWorksheet(
-          mathOptions,
-          worksheetTitle,
-          instructions,
-          mathOptions.specialMessage
-        );
-        
-        setGeneratedWorksheet(worksheet);
-        setIsPreviewMode(true);
+        if (worksheetType === 'grid') {
+          // We'll use the MathGridWorksheet component directly
+          setIsPreviewMode(true);
+        } else {
+          const instructions = mathOptions.instructions || `Complete the following math problems. Show your work when necessary.`;
+          const worksheetTitle = title || `Grade ${mathOptions.grade} ${mathOptions.difficulty.charAt(0).toUpperCase() + mathOptions.difficulty.slice(1)} Math Worksheet`;
+          
+          const worksheet = generateMathWorksheet(
+            mathOptions,
+            worksheetTitle,
+            instructions,
+            mathOptions.specialMessage
+          );
+          
+          setGeneratedWorksheet(worksheet);
+          setIsPreviewMode(true);
+        }
         
         toast({
           title: "Worksheet Generated",
@@ -179,49 +194,250 @@ const CreateWorksheet = () => {
     setIsPreviewMode(false);
   };
 
-  const renderStepContent = () => {
-    if (isPreviewMode && generatedWorksheet) {
-      return (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>Generated Worksheet</CardTitle>
-              <CardDescription className="mt-1">
-                Preview your worksheet before saving or exporting
-              </CardDescription>
+  const renderGridOptions = () => {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Math Grid Options</CardTitle>
+          <CardDescription>Customize your math grid worksheet</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="numProblems">Number of Problems</Label>
+              <Input
+                id="numProblems"
+                type="number"
+                min="1"
+                max="200"
+                value={mathGridOptions.numProblems}
+                onChange={(e) => setMathGridOptions({
+                  ...mathGridOptions,
+                  numProblems: parseInt(e.target.value)
+                })}
+              />
             </div>
-            <Button variant="outline" onClick={handleEditWorksheet}>
-              Edit Settings
-            </Button>
+            
+            <div className="space-y-2">
+              <Label htmlFor="columns">Columns</Label>
+              <Input
+                id="columns"
+                type="number"
+                min="1"
+                max="8"
+                value={mathGridOptions.columns}
+                onChange={(e) => setMathGridOptions({
+                  ...mathGridOptions,
+                  columns: parseInt(e.target.value)
+                })}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="maxNumber">Maximum Number</Label>
+              <Input
+                id="maxNumber"
+                type="number"
+                min="1"
+                max="1000"
+                value={mathGridOptions.maxNumber}
+                onChange={(e) => setMathGridOptions({
+                  ...mathGridOptions,
+                  maxNumber: parseInt(e.target.value)
+                })}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="minNumber">Minimum Number</Label>
+              <Input
+                id="minNumber"
+                type="number"
+                min="0"
+                max="100"
+                value={mathGridOptions.minNumber}
+                onChange={(e) => setMathGridOptions({
+                  ...mathGridOptions,
+                  minNumber: parseInt(e.target.value)
+                })}
+              />
+            </div>
           </div>
           
-          <GeneratedWorksheetView 
-            worksheet={generatedWorksheet} 
-            showAnswers={mathOptions.showAnswerKey}
-            spacing={mathOptions.spacing} 
-          />
+          <div className="space-y-2">
+            <Label>Operations</Label>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="addition" 
+                  checked={mathGridOptions.operations.includes('addition')}
+                  onCheckedChange={(checked) => {
+                    const newOperations = checked 
+                      ? [...mathGridOptions.operations, 'addition'] 
+                      : mathGridOptions.operations.filter(op => op !== 'addition');
+                    
+                    setMathGridOptions({...mathGridOptions, operations: newOperations});
+                  }}
+                />
+                <Label htmlFor="addition">Addition</Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="subtraction" 
+                  checked={mathGridOptions.operations.includes('subtraction')}
+                  onCheckedChange={(checked) => {
+                    const newOperations = checked 
+                      ? [...mathGridOptions.operations, 'subtraction'] 
+                      : mathGridOptions.operations.filter(op => op !== 'subtraction');
+                    
+                    setMathGridOptions({...mathGridOptions, operations: newOperations});
+                  }}
+                />
+                <Label htmlFor="subtraction">Subtraction</Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="multiplication" 
+                  checked={mathGridOptions.operations.includes('multiplication')}
+                  onCheckedChange={(checked) => {
+                    const newOperations = checked 
+                      ? [...mathGridOptions.operations, 'multiplication'] 
+                      : mathGridOptions.operations.filter(op => op !== 'multiplication');
+                    
+                    setMathGridOptions({...mathGridOptions, operations: newOperations});
+                  }}
+                />
+                <Label htmlFor="multiplication">Multiplication</Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="division" 
+                  checked={mathGridOptions.operations.includes('division')}
+                  onCheckedChange={(checked) => {
+                    const newOperations = checked 
+                      ? [...mathGridOptions.operations, 'division'] 
+                      : mathGridOptions.operations.filter(op => op !== 'division');
+                    
+                    setMathGridOptions({...mathGridOptions, operations: newOperations});
+                  }}
+                />
+                <Label htmlFor="division">Division</Label>
+              </div>
+            </div>
+          </div>
           
-          <Card>
-            <CardHeader>
-              <CardTitle>Save or Export Worksheet</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ExportOptions isReady={true} />
-            </CardContent>
-            <CardFooter className="flex justify-end gap-2">
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="showAnswers" 
+              checked={mathGridOptions.showAnswers}
+              onCheckedChange={(checked) => setMathGridOptions({
+                ...mathGridOptions,
+                showAnswers: !!checked
+              })}
+            />
+            <Label htmlFor="showAnswers">Show Answer Key</Label>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  const renderStepContent = () => {
+    if (isPreviewMode) {
+      if (worksheetType === 'grid') {
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Generated Math Grid Worksheet</CardTitle>
+                <CardDescription className="mt-1">
+                  Preview your worksheet before saving or exporting
+                </CardDescription>
+              </div>
               <Button variant="outline" onClick={handleEditWorksheet}>
-                Back to Editing
+                Edit Settings
               </Button>
-              <Button 
-                onClick={handleSave} 
-                className="bg-memora-purple hover:bg-memora-purple/90"
-              >
-                Save Worksheet
+            </div>
+            
+            <MathGridWorksheet 
+              title={title || "Math Practice Worksheet"}
+              operations={mathGridOptions.operations as any}
+              numProblems={mathGridOptions.numProblems}
+              maxNumber={mathGridOptions.maxNumber}
+              minNumber={mathGridOptions.minNumber}
+              columns={mathGridOptions.columns}
+              showAnswers={mathGridOptions.showAnswers}
+            />
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Save or Export Worksheet</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ExportOptions isReady={true} />
+              </CardContent>
+              <CardFooter className="flex justify-end gap-2">
+                <Button variant="outline" onClick={handleEditWorksheet}>
+                  Back to Editing
+                </Button>
+                <Button 
+                  onClick={handleSave} 
+                  className="bg-memora-purple hover:bg-memora-purple/90"
+                >
+                  Save Worksheet
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
+        );
+      } else if (generatedWorksheet) {
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Generated Worksheet</CardTitle>
+                <CardDescription className="mt-1">
+                  Preview your worksheet before saving or exporting
+                </CardDescription>
+              </div>
+              <Button variant="outline" onClick={handleEditWorksheet}>
+                Edit Settings
               </Button>
-            </CardFooter>
-          </Card>
-        </div>
-      );
+            </div>
+            
+            <GeneratedWorksheetView 
+              worksheet={generatedWorksheet} 
+              showAnswers={mathOptions.showAnswerKey}
+              spacing={mathOptions.spacing} 
+            />
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Save or Export Worksheet</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ExportOptions isReady={true} />
+              </CardContent>
+              <CardFooter className="flex justify-end gap-2">
+                <Button variant="outline" onClick={handleEditWorksheet}>
+                  Back to Editing
+                </Button>
+                <Button 
+                  onClick={handleSave} 
+                  className="bg-memora-purple hover:bg-memora-purple/90"
+                >
+                  Save Worksheet
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
+        );
+      }
+      
+      return null;
     }
     
     switch (step) {
@@ -327,7 +543,9 @@ const CreateWorksheet = () => {
               </CardContent>
             </Card>
             
-            {worksheetSubject === 'math' && (
+            {worksheetSubject === 'math' && worksheetType === 'grid' && renderGridOptions()}
+            
+            {worksheetSubject === 'math' && worksheetType !== 'grid' && (
               <Card>
                 <CardHeader>
                   <CardTitle>Math Worksheet Options</CardTitle>

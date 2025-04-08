@@ -135,7 +135,7 @@ const LoginForm = () => {
             />
           </div>
 
-          <Button type="submit" className="w-full bg-memora-purple" disabled={isLoading}>
+          <Button type="submit" className="w-full bg-memora-purple hover:bg-memora-purple/90" disabled={isLoading}>
             {isLoading ? 'Logging in...' : 'Sign in'}
           </Button>
         </form>

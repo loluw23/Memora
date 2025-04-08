@@ -17,6 +17,7 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   refreshUser: () => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -25,6 +26,7 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: true,
   isAuthenticated: false,
   refreshUser: async () => {},
+  signOut: async () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -88,6 +90,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const signOut = async () => {
+    try {
+      await supabase.auth.signOut();
+      setSession(null);
+      setUser(null);
+      toast({
+        title: 'Signed out successfully',
+        description: 'You have been logged out of your account',
+      });
+    } catch (error) {
+      console.error('Error signing out:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to sign out',
+        variant: 'destructive',
+      });
+    }
+  };
+
   useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -126,6 +147,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     isLoading,
     isAuthenticated: !!session,
     refreshUser,
+    signOut,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
