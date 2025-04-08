@@ -12,7 +12,7 @@ import {
   PenTool,
   Shapes,
   Activity,
-  CircleSquare,
+  Circle,
   Binary,
   Award
 } from 'lucide-react';
@@ -86,7 +86,7 @@ const subjects: SubjectOption[] = [
     id: 'chemistry',
     name: 'Chemistry',
     description: 'Elements, compounds, and reactions',
-    icon: <CircleSquare className="h-6 w-6" />,
+    icon: <Circle className="h-6 w-6" />,
     colorClass: 'bg-emerald-100 text-emerald-600'
   },
   {
