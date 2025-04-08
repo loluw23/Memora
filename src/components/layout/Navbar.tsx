@@ -85,73 +85,77 @@ const Navbar = () => {
                   </Link>
                 </NavigationMenuItem>
                 
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger>Library</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid grid-cols-2 gap-3 p-4 w-[400px]">
-                      <Link
-                        to="/library"
-                        className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
-                      >
-                        <div className="font-medium">Browse Library</div>
-                        <div className="text-sm text-muted-foreground">
-                          View all your study materials
+                {isAuthenticated && (
+                  <>
+                    <NavigationMenuItem>
+                      <NavigationMenuTrigger>Library</NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <div className="grid grid-cols-2 gap-3 p-4 w-[400px]">
+                          <Link
+                            to="/library"
+                            className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
+                          >
+                            <div className="font-medium">Browse Library</div>
+                            <div className="text-sm text-muted-foreground">
+                              View all your study materials
+                            </div>
+                          </Link>
+                          <Link
+                            to="/flashcards"
+                            className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
+                          >
+                            <div className="font-medium">Flashcards</div>
+                            <div className="text-sm text-muted-foreground">
+                              Create and review flashcards
+                            </div>
+                          </Link>
+                          <Link
+                            to="/quizzes"
+                            className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
+                          >
+                            <div className="font-medium">Quizzes</div>
+                            <div className="text-sm text-muted-foreground">
+                              Test your knowledge
+                            </div>
+                          </Link>
+                          <Link
+                            to="/worksheets"
+                            className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
+                          >
+                            <div className="font-medium">Worksheets</div>
+                            <div className="text-sm text-muted-foreground">
+                              Practice with worksheets
+                            </div>
+                          </Link>
                         </div>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                    
+                    <NavigationMenuItem>
+                      <Link to="/flashcards" className={navigationMenuTriggerStyle()}>
+                        Flashcards
                       </Link>
-                      <Link
-                        to="/flashcards"
-                        className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
-                      >
-                        <div className="font-medium">Flashcards</div>
-                        <div className="text-sm text-muted-foreground">
-                          Create and review flashcards
-                        </div>
+                    </NavigationMenuItem>
+                    
+                    <NavigationMenuItem>
+                      <Link to="/quizzes" className={navigationMenuTriggerStyle()}>
+                        Quizzes
                       </Link>
-                      <Link
-                        to="/quizzes"
-                        className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
-                      >
-                        <div className="font-medium">Quizzes</div>
-                        <div className="text-sm text-muted-foreground">
-                          Test your knowledge
-                        </div>
+                    </NavigationMenuItem>
+                    
+                    <NavigationMenuItem>
+                      <Link to="/worksheets" className={navigationMenuTriggerStyle()}>
+                        Worksheets
                       </Link>
-                      <Link
-                        to="/worksheets"
-                        className="flex flex-col space-y-1 rounded-md p-3 hover:bg-accent"
-                      >
-                        <div className="font-medium">Worksheets</div>
-                        <div className="text-sm text-muted-foreground">
-                          Practice with worksheets
-                        </div>
+                    </NavigationMenuItem>
+                    
+                    <NavigationMenuItem>
+                      <Link to="/stats" className={navigationMenuTriggerStyle()}>
+                        Stats
                       </Link>
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-                
-                <NavigationMenuItem>
-                  <Link to="/flashcards" className={navigationMenuTriggerStyle()}>
-                    Flashcards
-                  </Link>
-                </NavigationMenuItem>
-                
-                <NavigationMenuItem>
-                  <Link to="/quizzes" className={navigationMenuTriggerStyle()}>
-                    Quizzes
-                  </Link>
-                </NavigationMenuItem>
-                
-                <NavigationMenuItem>
-                  <Link to="/worksheets" className={navigationMenuTriggerStyle()}>
-                    Worksheets
-                  </Link>
-                </NavigationMenuItem>
-                
-                <NavigationMenuItem>
-                  <Link to="/stats" className={navigationMenuTriggerStyle()}>
-                    Stats
-                  </Link>
-                </NavigationMenuItem>
+                    </NavigationMenuItem>
+                  </>
+                )}
 
                 {isAuthenticated && (
                   <NavigationMenuItem>
@@ -171,10 +175,12 @@ const Navbar = () => {
         </div>
         
         <div className="flex items-center gap-4">
-          <div className="relative w-64 hidden md:block animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search..." className="pl-10 rounded-full bg-secondary" />
-          </div>
+          {isAuthenticated && !isLandingPage && (
+            <div className="relative w-64 hidden md:block animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input placeholder="Search..." className="pl-10 rounded-full bg-secondary" />
+            </div>
+          )}
           
           <div className="flex items-center gap-2">
             {isLandingPage ? (
@@ -230,17 +236,6 @@ const Navbar = () => {
               ) : (
                 <>
                   <Button 
-                    className="rounded-full bg-memora-purple hover:bg-memora-purple/90 animate-fade-in" 
-                    size="sm"
-                    asChild
-                    style={{ animationDelay: '0.3s' }}
-                  >
-                    <Link to="/app">
-                      App <ArrowRight size={14} className="ml-1" />
-                    </Link>
-                  </Button>
-                  
-                  <Button 
                     className="rounded-full animate-fade-in" 
                     size="sm"
                     variant="outline"
@@ -266,67 +261,69 @@ const Navbar = () => {
                 </>
               )
             ) : (
-              <>
-                <Button 
-                  className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors animate-fade-in" 
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  style={{ animationDelay: '0.3s' }}
-                >
-                  <Link to="/stats">
-                    <BarChart2 size={20} />
-                  </Link>
-                </Button>
-                
-                <Button 
-                  className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors animate-fade-in" 
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  style={{ animationDelay: '0.4s' }}
-                >
-                  <Link to="/settings">
-                    <Settings size={20} />
-                  </Link>
-                </Button>
-                
-                <Button
-                  className="p-2 rounded-full text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors animate-fade-in"
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleLogout}
-                  style={{ animationDelay: '0.45s' }}
-                >
-                  <LogOut size={18} className="mr-1" />
-                  Sign Out
-                </Button>
-                
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="p-0 h-8 w-8 rounded-full">
-                      <UserAvatar className="animate-fade-in" style={{ animationDelay: '0.5s' }} />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>
-                      {user?.profile?.username || 'Account'}
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                      <Link to="/profile">Profile</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link to="/settings">Settings</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout} className="text-red-500">
-                      <LogOut size={14} className="mr-2" />
-                      Log out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
+              isAuthenticated && (
+                <>
+                  <Button 
+                    className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors animate-fade-in" 
+                    variant="ghost"
+                    size="icon"
+                    asChild
+                    style={{ animationDelay: '0.3s' }}
+                  >
+                    <Link to="/stats">
+                      <BarChart2 size={20} />
+                    </Link>
+                  </Button>
+                  
+                  <Button 
+                    className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors animate-fade-in" 
+                    variant="ghost"
+                    size="icon"
+                    asChild
+                    style={{ animationDelay: '0.4s' }}
+                  >
+                    <Link to="/settings">
+                      <Settings size={20} />
+                    </Link>
+                  </Button>
+                  
+                  <Button
+                    className="p-2 rounded-full text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors animate-fade-in"
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleLogout}
+                    style={{ animationDelay: '0.45s' }}
+                  >
+                    <LogOut size={18} className="mr-1" />
+                    Sign Out
+                  </Button>
+                  
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="p-0 h-8 w-8 rounded-full">
+                        <UserAvatar className="animate-fade-in" style={{ animationDelay: '0.5s' }} />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>
+                        {user?.profile?.username || 'Account'}
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/profile">Profile</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/settings">Settings</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={handleLogout} className="text-red-500">
+                        <LogOut size={14} className="mr-2" />
+                        Log out
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </>
+              )
             )}
           </div>
         </div>

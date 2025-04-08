@@ -60,19 +60,21 @@ const SignupForm = () => {
     setError(null);
 
     try {
-      await signUp({
+      console.log('Attempting signup with:', values.email);
+      const response = await signUp({
         email: values.email,
         password: values.password,
         username: values.username,
       });
       
-      console.log('Signup successful');
+      console.log('Signup successful, response:', response);
       
       toast({
         title: 'Account created successfully',
         description: 'You can now log in with your credentials.',
       });
 
+      // Redirect to login page after successful signup
       navigate('/login');
     } catch (error: any) {
       console.error('Signup error:', error);

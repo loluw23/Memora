@@ -1,11 +1,12 @@
-
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, BookOpen, Brain, FileCheck, Star, Medal, Clock } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const LandingPage = () => {
+  const { isAuthenticated } = useAuth();
   // Refs for scroll sections
   const featuresRef = useRef<HTMLDivElement>(null);
   const howItWorksRef = useRef<HTMLDivElement>(null);
@@ -56,35 +57,51 @@ const LandingPage = () => {
             >
               Pricing
             </button>
-            <Link to="/app">
-              <Button className="rounded-full gap-1">
-                Go to App <ArrowRight size={16} />
-              </Button>
-            </Link>
-            <Link to="/login">
-              <Button variant="outline" className="rounded-full">
-                Login
-              </Button>
-            </Link>
-            <Link to="/signup">
-              <Button variant="secondary" className="rounded-full">
-                Sign Up
-              </Button>
-            </Link>
+            
+            {isAuthenticated ? (
+              <Link to="/app">
+                <Button className="rounded-full gap-1">
+                  Go to App <ArrowRight size={16} />
+                </Button>
+              </Link>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button variant="outline" className="rounded-full">
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/signup">
+                  <Button variant="secondary" className="rounded-full">
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
+            )}
           </nav>
           
           <div className="md:hidden">
             <div className="flex gap-2">
-              <Link to="/login">
-                <Button size="sm" variant="outline" className="rounded-full">
-                  Login
-                </Button>
-              </Link>
-              <Link to="/app">
-                <Button size="sm" className="rounded-full">
-                  App <ArrowRight size={14} className="ml-1" />
-                </Button>
-              </Link>
+              {isAuthenticated ? (
+                <Link to="/app">
+                  <Button size="sm" className="rounded-full">
+                    App <ArrowRight size={14} className="ml-1" />
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  <Link to="/login">
+                    <Button size="sm" variant="outline" className="rounded-full">
+                      Login
+                    </Button>
+                  </Link>
+                  <Link to="/signup">
+                    <Button size="sm" className="rounded-full">
+                      Sign Up
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -101,11 +118,19 @@ const LandingPage = () => {
               Memora combines flashcards, quizzes, and AI-powered learning tools to help you learn faster and remember longer.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <Link to="/app">
-                <Button size="lg" className="rounded-full px-8 bg-memora-purple hover:bg-memora-purple/90">
-                  Get Started <ArrowRight className="ml-2" size={18} />
-                </Button>
-              </Link>
+              {isAuthenticated ? (
+                <Link to="/app">
+                  <Button size="lg" className="rounded-full px-8 bg-memora-purple hover:bg-memora-purple/90">
+                    Dashboard <ArrowRight className="ml-2" size={18} />
+                  </Button>
+                </Link>
+              ) : (
+                <Link to="/signup">
+                  <Button size="lg" className="rounded-full px-8 bg-memora-purple hover:bg-memora-purple/90">
+                    Get Started <ArrowRight className="ml-2" size={18} />
+                  </Button>
+                </Link>
+              )}
               <button 
                 onClick={() => scrollToSection(featuresRef)}
                 className="rounded-full px-8 py-2 border border-border hover:bg-secondary transition-colors"

@@ -43,19 +43,12 @@ const LoginForm = () => {
     setError(null);
 
     try {
-      // First, try to login with email
-      if (values.identifier.includes('@')) {
-        await login({
-          identifier: values.identifier,
-          password: values.password,
-        });
-      } else {
-        // If not an email, try to login with username
-        await login({
-          identifier: values.identifier, 
-          password: values.password,
-        });
-      }
+      console.log('Attempting login with:', values.identifier);
+      // First, try to login with email or username
+      await login({
+        identifier: values.identifier,
+        password: values.password,
+      });
 
       await refreshUser();
       
