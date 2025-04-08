@@ -63,6 +63,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const refreshUser = async () => {
     try {
+      setIsLoading(true);
       const { data: { session: currentSession } } = await supabase.auth.getSession();
       
       if (!currentSession) {
@@ -87,6 +88,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         description: 'Failed to refresh user information',
         variant: 'destructive',
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -112,7 +115,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, newSession) => {
+      async (event, newSession) => {
         console.log('Auth state changed:', event, newSession?.user?.id);
         setSession(newSession);
         
@@ -134,7 +137,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     );
 
     // THEN check for existing session
-    refreshUser().then(() => setIsLoading(false));
+    refreshUser();
 
     return () => {
       subscription.unsubscribe();

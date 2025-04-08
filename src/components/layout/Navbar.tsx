@@ -223,7 +223,7 @@ const Navbar = () => {
                   </Button>
                   
                   <Button 
-                    className="rounded-full animate-fade-in" 
+                    className="rounded-full bg-memora-purple hover:bg-memora-purple/90 animate-fade-in" 
                     size="sm"
                     asChild
                     style={{ animationDelay: '0.4s' }}
@@ -235,7 +235,7 @@ const Navbar = () => {
                 </>
               )
             ) : (
-              isAuthenticated && (
+              isAuthenticated ? (
                 <>
                   <Button 
                     className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors animate-fade-in" 
@@ -285,6 +285,31 @@ const Navbar = () => {
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
+                </>
+              ) : (
+                <>
+                  <Button 
+                    className="rounded-full animate-fade-in" 
+                    size="sm"
+                    variant="outline"
+                    asChild
+                    style={{ animationDelay: '0.35s' }}
+                  >
+                    <Link to="/login">
+                      Login
+                    </Link>
+                  </Button>
+                  
+                  <Button 
+                    className="rounded-full bg-memora-purple hover:bg-memora-purple/90 animate-fade-in" 
+                    size="sm"
+                    asChild
+                    style={{ animationDelay: '0.4s' }}
+                  >
+                    <Link to="/signup">
+                      Sign Up
+                    </Link>
+                  </Button>
                 </>
               )
             )}

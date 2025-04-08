@@ -3,7 +3,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { login } from '@/services/auth';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -25,9 +25,13 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 const LoginForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
   const { refreshUser } = useAuth();
   const [error, setError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
+  
+  // Get the redirect path from location state or default to app
+  const from = location.state?.from || '/app';
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -57,7 +61,8 @@ const LoginForm = () => {
         description: 'You have successfully logged in.',
       });
 
-      navigate('/app');
+      // Navigate to the from path or default to /app
+      navigate(from, { replace: true });
     } catch (error: any) {
       console.error('Login error:', error);
       setError(error.message || 'Invalid credentials');
