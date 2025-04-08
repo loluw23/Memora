@@ -9,7 +9,12 @@ import {
   GraduationCap, 
   Globe, 
   Music, 
-  PenTool
+  PenTool,
+  Shapes,
+  Activity,
+  CircleSquare,
+  Binary,
+  Award
 } from 'lucide-react';
 
 export type WorksheetSubject = 
@@ -20,7 +25,11 @@ export type WorksheetSubject =
   | 'geography' 
   | 'music' 
   | 'art' 
-  | 'literature';
+  | 'literature'
+  | 'computerscience'
+  | 'economics'
+  | 'physics'
+  | 'chemistry';
 
 interface SubjectOption {
   id: WorksheetSubject;
@@ -67,6 +76,20 @@ const subjects: SubjectOption[] = [
     colorClass: 'bg-cyan-100 text-cyan-600'
   },
   {
+    id: 'physics',
+    name: 'Physics',
+    description: 'Forces, motion, and energy',
+    icon: <Activity className="h-6 w-6" />,
+    colorClass: 'bg-red-100 text-red-600'
+  },
+  {
+    id: 'chemistry',
+    name: 'Chemistry',
+    description: 'Elements, compounds, and reactions',
+    icon: <CircleSquare className="h-6 w-6" />,
+    colorClass: 'bg-emerald-100 text-emerald-600'
+  },
+  {
     id: 'music',
     name: 'Music',
     description: 'Notes, rhythm, and instruments',
@@ -86,6 +109,20 @@ const subjects: SubjectOption[] = [
     description: 'Reading comprehension and analysis',
     icon: <BookOpen className="h-6 w-6" />,
     colorClass: 'bg-indigo-100 text-indigo-600'
+  },
+  {
+    id: 'computerscience',
+    name: 'Computer Science',
+    description: 'Programming, algorithms, and logic',
+    icon: <Binary className="h-6 w-6" />,
+    colorClass: 'bg-slate-100 text-slate-600'
+  },
+  {
+    id: 'economics',
+    name: 'Economics',
+    description: 'Markets, money, and economic systems',
+    icon: <Award className="h-6 w-6" />,
+    colorClass: 'bg-orange-100 text-orange-600'
   }
 ];
 
@@ -98,12 +135,12 @@ const SubjectSelector: React.FC<SubjectSelectorProps> = ({ selectedSubject, onSe
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Select Subject</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {subjects.map((subject) => (
           <Card 
             key={subject.id}
             className={`cursor-pointer transition-all hover:shadow-md ${
-              selectedSubject === subject.id ? 'ring-2 ring-memora-purple' : ''
+              selectedSubject === subject.id ? 'ring-2 ring-memora-purple shadow-sm' : ''
             }`}
             onClick={() => onSelectSubject(subject.id)}
           >

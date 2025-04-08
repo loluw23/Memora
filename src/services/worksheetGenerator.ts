@@ -7,6 +7,7 @@ interface MathGenerationOptions {
   questionCount: number;
   includeGeometricShapes: boolean;
   include3dFigures: boolean;
+  copyright?: string;
 }
 
 interface Question {
@@ -22,6 +23,9 @@ interface GeneratedWorksheet {
   specialMessage?: string;
   questions: Question[];
   answerKey: { [key: number]: string };
+  grade?: string;
+  subject?: string;
+  copyright?: string;
 }
 
 // Generate a random number within a range
@@ -362,14 +366,18 @@ const generateGeometryProblems = (grade: string, count: number, difficulty: stri
         const shape2D = shapes2D[randomInt(0, shapes2D.length - 1)];
         question = `Name this 2D shape.`;
         answer = shape2D;
-        figure = `[A ${shape2D} is shown]`;
+        if (includeShapes) {
+          figure = generateShapeSVG(shape2D);
+        }
         break;
         
       case 'identify-3d':
         const shape3D = shapes3D[randomInt(0, shapes3D.length - 1)];
         question = `Name this 3D figure.`;
         answer = shape3D;
-        figure = `[A ${shape3D} is shown]`;
+        if (include3dFigures) {
+          figure = `[A ${shape3D} is shown]`;
+        }
         break;
         
       case 'count-sides':
@@ -386,7 +394,7 @@ const generateGeometryProblems = (grade: string, count: number, difficulty: stri
         question = `How many sides does a ${sideShape} have?`;
         answer = sides.toString();
         if (includeShapes) {
-          figure = `[A ${sideShape} is shown]`;
+          figure = generateShapeSVG(sideShape);
         }
         break;
         
@@ -397,7 +405,7 @@ const generateGeometryProblems = (grade: string, count: number, difficulty: stri
         question = `Find the perimeter of a rectangle with length ${length} units and width ${width} units.`;
         answer = `${2 * (length + width)} units`;
         if (includeShapes) {
-          figure = `[A rectangle with length ${length} and width ${width} is shown]`;
+          figure = generateRectangleSVG(length, width);
         }
         break;
         
@@ -408,7 +416,7 @@ const generateGeometryProblems = (grade: string, count: number, difficulty: stri
         question = `Find the area of a rectangle with length ${areaLength} units and width ${areaWidth} units.`;
         answer = `${areaLength * areaWidth} square units`;
         if (includeShapes) {
-          figure = `[A rectangle with length ${areaLength} and width ${areaWidth} is shown]`;
+          figure = generateRectangleSVG(areaLength, areaWidth, true);
         }
         break;
         
@@ -419,7 +427,7 @@ const generateGeometryProblems = (grade: string, count: number, difficulty: stri
         question = `Find the area of a triangle with base ${base} units and height ${height} units.`;
         answer = `${(base * height) / 2} square units`;
         if (includeShapes) {
-          figure = `[A triangle with base ${base} and height ${height} is shown]`;
+          figure = generateTriangleSVG(base, height);
         }
         break;
         
@@ -429,7 +437,7 @@ const generateGeometryProblems = (grade: string, count: number, difficulty: stri
         question = `Find the volume of a cube with side length ${side} units.`;
         answer = `${side * side * side} cubic units`;
         if (includeShapes && include3dFigures) {
-          figure = `[A cube with side length ${side} is shown]`;
+          figure = generateCubeSVG(side);
         }
         break;
         
@@ -447,17 +455,168 @@ const generateGeometryProblems = (grade: string, count: number, difficulty: stri
       question,
       answer,
       explanation: `Apply the formula for ${problemType.replace(/-/g, ' ')} to get ${answer}`,
-      figure: includeShapes ? figure : undefined
+      figure: (includeShapes || include3dFigures) ? figure : undefined
     });
   }
   
   return questions;
 };
 
+// Generate SVG representation of shapes
+function generateShapeSVG(shapeName: string): string {
+  switch(shapeName.toLowerCase()) {
+    case 'square':
+      return '<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="80" height="80" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/></svg>';
+    case 'rectangle':
+      return '<svg width="120" height="80" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="100" height="60" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/></svg>';
+    case 'triangle':
+      return '<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,10 10,90 90,90" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/></svg>';
+    case 'circle':
+      return '<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/></svg>';
+    case 'pentagon':
+      return '<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,10 90,40 75,90 25,90 10,40" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/></svg>';
+    case 'hexagon':
+      return '<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,10 90,30 90,70 50,90 10,70 10,30" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/></svg>';
+    default:
+      return `[A ${shapeName} is shown]`;
+  }
+}
+
+function generateRectangleSVG(length: number, width: number, showArea: boolean = false): string {
+  const scaleFactor = 10;
+  const svgWidth = length * scaleFactor + 20;
+  const svgHeight = width * scaleFactor + 20;
+  const rectWidth = length * scaleFactor;
+  const rectHeight = width * scaleFactor;
+  
+  let svg = `<svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg">`;
+  svg += `<rect x="10" y="10" width="${rectWidth}" height="${rectHeight}" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>`;
+  
+  // Add dimensions
+  svg += `<text x="${10 + rectWidth/2}" y="${svgHeight - 5}" text-anchor="middle" font-size="12">${length} units</text>`;
+  svg += `<text x="5" y="${10 + rectHeight/2}" text-anchor="middle" font-size="12" transform="rotate(-90, 5, ${10 + rectHeight/2})">${width} units</text>`;
+  
+  if (showArea) {
+    svg += `<text x="${10 + rectWidth/2}" y="${10 + rectHeight/2}" text-anchor="middle" font-size="14" fill="#64748b">Area = ${length * width}</text>`;
+  }
+  
+  svg += '</svg>';
+  return svg;
+}
+
+function generateTriangleSVG(base: number, height: number): string {
+  const scaleFactor = 10;
+  const svgWidth = base * scaleFactor + 20;
+  const svgHeight = height * scaleFactor + 20;
+  const triangleBase = base * scaleFactor;
+  const triangleHeight = height * scaleFactor;
+  
+  let svg = `<svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg">`;
+  svg += `<polygon points="${10 + triangleBase/2},10 10,${10 + triangleHeight} ${10 + triangleBase},${10 + triangleHeight}" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>`;
+  
+  // Add dimensions
+  svg += `<text x="${10 + triangleBase/2}" y="${svgHeight - 5}" text-anchor="middle" font-size="12">Base = ${base} units</text>`;
+  svg += `<line x1="${10 + triangleBase}" y1="${10 + triangleHeight}" x2="${10 + triangleBase}" y2="${10}" stroke="#64748b" stroke-dasharray="4" stroke-width="1"/>`;
+  svg += `<text x="${svgWidth - 5}" y="${10 + triangleHeight/2}" text-anchor="middle" font-size="12" transform="rotate(-90, ${svgWidth - 5}, ${10 + triangleHeight/2})">Height = ${height} units</text>`;
+  
+  svg += '</svg>';
+  return svg;
+}
+
+function generateCubeSVG(side: number): string {
+  const scaleFactor = 10;
+  const size = side * scaleFactor;
+  const offset = side * 3;
+  
+  let svg = `<svg width="${size + offset}" height="${size + offset}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size + offset} ${size + offset}">`;
+  
+  // Draw a simple cube isometric projection
+  svg += `<polygon points="${offset},0 ${size + offset},0 ${size},${offset} 0,${offset}" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>`;
+  svg += `<polygon points="0,${offset} ${size},${offset} ${size},${size + offset} 0,${size + offset}" fill="#d1d5db" stroke="#64748b" stroke-width="2"/>`;
+  svg += `<polygon points="${size},${offset} ${size + offset},0 ${size + offset},${size} ${size},${size + offset}" fill="#cbd5e1" stroke="#64748b" stroke-width="2"/>`;
+  
+  // Add dimension
+  svg += `<text x="${size/2}" y="${size + offset + 15}" text-anchor="middle" font-size="12">Side length = ${side} units</text>`;
+  
+  svg += '</svg>';
+  return svg;
+}
+
 // Greatest Common Divisor (for fraction simplification)
 function gcd(a: number, b: number): number {
   return b === 0 ? a : gcd(b, a % b);
 }
+
+// Generate algebra problems
+const generateAlgebraProblems = (grade: string, count: number, difficulty: string): Question[] => {
+  const questions: Question[] = [];
+  
+  if (Number(grade) < 6) {
+    // For lower grades, generate simpler pre-algebra problems
+    for (let i = 0; i < count; i++) {
+      const a = randomInt(1, 10);
+      const b = randomInt(1, 20);
+      const c = a * randomInt(1, 5);
+      
+      questions.push({
+        question: `Find the value of x: ${a} × x = ${c}`,
+        answer: `x = ${c / a}`,
+        explanation: `Divide both sides by ${a} to get x = ${c / a}`
+      });
+    }
+  } else {
+    // For higher grades, generate more complex algebra problems
+    for (let i = 0; i < count; i++) {
+      let question, answer;
+      
+      const type = randomInt(1, 4);
+      
+      switch(type) {
+        case 1:
+          // Linear equation: ax + b = c
+          const a = randomInt(2, 10);
+          const b = randomInt(1, 20);
+          const x = randomInt(-10, 10);
+          const c = a * x + b;
+          
+          question = `Solve for x: ${a}x + ${b} = ${c}`;
+          answer = `x = ${x}`;
+          break;
+          
+        case 2:
+          // Two-step equation: ax + b = c
+          const a2 = randomInt(2, 5);
+          const b2 = randomInt(5, 15);
+          const x2 = randomInt(-5, 5);
+          const c2 = a2 * x2 + b2;
+          
+          question = `Solve for x: ${a2}x + ${b2} = ${c2}`;
+          answer = `x = ${x2}`;
+          break;
+          
+        case 3:
+          // System of equations (simplified for worksheet)
+          question = "Solve the system:\nx + y = 5\n2x - y = 1";
+          answer = "x = 2, y = 3";
+          break;
+          
+        case 4:
+          // Quadratic equation (simplified for worksheet)
+          question = "Solve: x² - 5x + 6 = 0";
+          answer = "x = 2 or x = 3";
+          break;
+      }
+      
+      questions.push({
+        question,
+        answer,
+        explanation: "Apply algebraic principles to solve for the unknown variable."
+      });
+    }
+  }
+  
+  return questions;
+};
 
 // Generate math worksheet based on options
 export const generateMathWorksheet = (
@@ -466,7 +625,7 @@ export const generateMathWorksheet = (
   instructions: string,
   specialMessage?: string
 ): GeneratedWorksheet => {
-  const { grade, topics, difficulty, questionCount, includeGeometricShapes, include3dFigures } = options;
+  const { grade, topics, difficulty, questionCount, includeGeometricShapes, include3dFigures, copyright } = options;
   let questions: Question[] = [];
   
   // Calculate questions per topic
@@ -498,6 +657,11 @@ export const generateMathWorksheet = (
       case 'geometry':
         questions = [...questions, ...generateGeometryProblems(grade, topicQuestionCount, difficulty, includeGeometricShapes, include3dFigures)];
         break;
+      case 'algebra':
+      case 'pre_algebra':
+      case 'expressions':
+        questions = [...questions, ...generateAlgebraProblems(grade, topicQuestionCount, difficulty)];
+        break;
       // Add more topics as needed
     }
   }
@@ -518,7 +682,10 @@ export const generateMathWorksheet = (
     instructions,
     specialMessage,
     questions,
-    answerKey
+    answerKey,
+    grade,
+    subject: 'Mathematics',
+    copyright: copyright || `© ${new Date().getFullYear()} Memora Learning. All rights reserved.`
   };
 };
 
@@ -531,3 +698,7 @@ function shuffleArray<T>(array: T[]): T[] {
   }
   return newArray;
 }
+
+export default {
+  generateMathWorksheet
+};
