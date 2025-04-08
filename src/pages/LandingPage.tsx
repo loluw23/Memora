@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, BookOpen, Brain, FileCheck, Star, Medal, Clock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import Navbar from '@/components/layout/Navbar';
 
 const LandingPage = () => {
   const { isAuthenticated } = useAuth();
@@ -20,92 +21,8 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Header/Nav */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="bg-memora-purple text-white rounded-lg p-1">
-                <BookOpen size={24} />
-              </div>
-              <span className="font-bold text-xl tracking-tight">Memora</span>
-            </Link>
-          </div>
-          
-          <nav className="hidden md:flex items-center gap-6">
-            <button 
-              onClick={() => scrollToSection(featuresRef)} 
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Features
-            </button>
-            <button 
-              onClick={() => scrollToSection(howItWorksRef)} 
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              How It Works
-            </button>
-            <button 
-              onClick={() => scrollToSection(testimonialsRef)} 
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Testimonials
-            </button>
-            <button 
-              onClick={() => scrollToSection(pricingRef)} 
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Pricing
-            </button>
-            
-            {isAuthenticated ? (
-              <Link to="/app">
-                <Button className="rounded-full gap-1">
-                  Go to App <ArrowRight size={16} />
-                </Button>
-              </Link>
-            ) : (
-              <>
-                <Link to="/login">
-                  <Button variant="outline" className="rounded-full">
-                    Login
-                  </Button>
-                </Link>
-                <Link to="/signup">
-                  <Button variant="secondary" className="rounded-full">
-                    Sign Up
-                  </Button>
-                </Link>
-              </>
-            )}
-          </nav>
-          
-          <div className="md:hidden">
-            <div className="flex gap-2">
-              {isAuthenticated ? (
-                <Link to="/app">
-                  <Button size="sm" className="rounded-full">
-                    App <ArrowRight size={14} className="ml-1" />
-                  </Button>
-                </Link>
-              ) : (
-                <>
-                  <Link to="/login">
-                    <Button size="sm" variant="outline" className="rounded-full">
-                      Login
-                    </Button>
-                  </Link>
-                  <Link to="/signup">
-                    <Button size="sm" className="rounded-full">
-                      Sign Up
-                    </Button>
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Use the Navbar component for consistent navigation */}
+      <Navbar />
 
       {/* Hero Section */}
       <section className="pt-24 md:pt-32 pb-16 md:pb-32">
@@ -299,16 +216,26 @@ const LandingPage = () => {
               Join thousands of students who are learning faster and remembering more with Memora.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Link to="/app">
-                <Button size="lg" className="rounded-full px-8 bg-memora-purple hover:bg-memora-purple/90">
-                  Start Learning Now <ArrowRight className="ml-2" size={18} />
-                </Button>
-              </Link>
-              <Link to="/signup">
-                <Button size="lg" variant="outline" className="rounded-full px-8">
-                  Create Account
-                </Button>
-              </Link>
+              {isAuthenticated ? (
+                <Link to="/app">
+                  <Button size="lg" className="rounded-full px-8 bg-memora-purple hover:bg-memora-purple/90">
+                    Start Learning Now <ArrowRight className="ml-2" size={18} />
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  <Link to="/signup">
+                    <Button size="lg" className="rounded-full px-8 bg-memora-purple hover:bg-memora-purple/90">
+                      Create Account <ArrowRight className="ml-2" size={18} />
+                    </Button>
+                  </Link>
+                  <Link to="/login">
+                    <Button size="lg" variant="outline" className="rounded-full px-8">
+                      Sign In
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

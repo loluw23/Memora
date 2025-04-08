@@ -3,7 +3,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { login } from '@/services/auth';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -110,7 +110,7 @@ const LoginForm = () => {
             )}
           />
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center justify-between">
             <FormField
               control={form.control}
               name="rememberMe"
@@ -122,10 +122,13 @@ const LoginForm = () => {
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormLabel className="text-sm font-normal">Remember me for 30 days</FormLabel>
+                  <FormLabel className="text-sm font-normal">Remember me</FormLabel>
                 </FormItem>
               )}
             />
+            <Link to="/signup" className="text-sm text-memora-purple hover:underline">
+              Don't have an account? Sign up
+            </Link>
           </div>
 
           <Button type="submit" className="w-full bg-memora-purple hover:bg-memora-purple/90" disabled={isLoading}>

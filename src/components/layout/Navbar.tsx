@@ -32,12 +32,11 @@ const Navbar = () => {
   const { toast } = useToast();
   const isLandingPage = location.pathname === "/";
   
-  // Function to handle logo click - always navigate to dashboard if authenticated
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
     if (isAuthenticated) {
       navigate('/app');
-    } else if (!isLandingPage) {
+    } else {
       navigate('/');
     }
   };
@@ -156,19 +155,6 @@ const Navbar = () => {
                     </NavigationMenuItem>
                   </>
                 )}
-
-                {isAuthenticated && (
-                  <NavigationMenuItem>
-                    <Button 
-                      onClick={handleLogout}
-                      className={navigationMenuTriggerStyle()} 
-                      variant="ghost"
-                    >
-                      <LogOut size={16} className="mr-1" />
-                      Sign Out
-                    </Button>
-                  </NavigationMenuItem>
-                )}
               </NavigationMenuList>
             </NavigationMenu>
           ) : null}
@@ -197,17 +183,6 @@ const Navbar = () => {
                     </Link>
                   </Button>
 
-                  <Button 
-                    className="rounded-full text-red-500 hover:bg-red-50 animate-fade-in" 
-                    size="sm"
-                    variant="outline"
-                    onClick={handleLogout}
-                    style={{ animationDelay: '0.35s' }}
-                  >
-                    <LogOut size={14} className="mr-1" />
-                    Sign Out
-                  </Button>
-                  
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="p-0 h-8 w-8 rounded-full">
@@ -250,7 +225,6 @@ const Navbar = () => {
                   <Button 
                     className="rounded-full animate-fade-in" 
                     size="sm"
-                    variant="secondary"
                     asChild
                     style={{ animationDelay: '0.4s' }}
                   >
@@ -285,17 +259,6 @@ const Navbar = () => {
                     <Link to="/settings">
                       <Settings size={20} />
                     </Link>
-                  </Button>
-                  
-                  <Button
-                    className="p-2 rounded-full text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors animate-fade-in"
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleLogout}
-                    style={{ animationDelay: '0.45s' }}
-                  >
-                    <LogOut size={18} className="mr-1" />
-                    Sign Out
                   </Button>
                   
                   <DropdownMenu>

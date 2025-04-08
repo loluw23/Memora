@@ -124,12 +124,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
               ...newSession.user,
               profile: profile || undefined,
             });
+            setIsLoading(false);
           }, 0);
         } else {
           setUser(null);
+          setIsLoading(false);
         }
-        
-        setIsLoading(false);
       }
     );
 
