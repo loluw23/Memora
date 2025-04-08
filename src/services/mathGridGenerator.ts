@@ -33,7 +33,8 @@ export const generateMathGridWorksheet = (options: GridWorksheetOptions): MathPr
     
     const operation = operations[operationIndex];
     
-    const num1 = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
+    // Changed from const to let so it can be reassigned later
+    let num1 = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
     
     // For division, ensure we have a clean division
     let num2: number;
@@ -49,7 +50,7 @@ export const generateMathGridWorksheet = (options: GridWorksheetOptions): MathPr
       // Use the clean num1 if it's within our range
       if (cleanNum1 <= maxNumber) {
         num2 = num2;
-        num1 = cleanNum1;
+        num1 = cleanNum1; // Now this is valid since num1 is declared with let
       }
     } else if (operation === 'subtraction' && !allowNegatives) {
       // For subtraction, ensure num1 >= num2 if negatives aren't allowed
